@@ -1,11 +1,13 @@
 import uuid
-from qdrant_client.models import Filter
-
+from qdrant_client.models import PayloadSchemaType
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
     Distance,
     VectorParams,
     PointStruct,
+    Filter,
+    FieldCondition,
+    MatchValue,
 )
 
 from app.core.config import (
@@ -16,7 +18,10 @@ from app.core.config import (
 from app.services.gemini import get_embedding
 
 
-# Connect to Qdrant Cloud
+# ======================================================
+# Qdrant Client
+# ======================================================
+
 client = QdrantClient(
     url=QDRANT_URL,
     api_key=QDRANT_API_KEY,
@@ -25,16 +30,17 @@ client = QdrantClient(
 COLLECTION_NAME = "support_docs"
 
 
-# Create collection if not exists
+# ======================================================
+# Create Collection
+# ======================================================
+
 def create_collection():
 
     collections = client.get_collections().collections
-
     names = [collection.name for collection in collections]
 
     if COLLECTION_NAME not in names:
 
-        # Get embedding dimension automatically
         vector_size = len(get_embedding("hello"))
 
         client.create_collection(
@@ -52,8 +58,14 @@ def create_collection():
         print("✅ Collection Already Exists")
 
 
-# Insert documents into Qdrant
-def insert_documents(documents: list[str]):
+# ======================================================
+# Insert Documents
+# ======================================================
+
+def insert_documents(
+    documents: list[str],
+    tenant_id: str = "tenant_1",
+):
 
     points = []
 
@@ -67,6 +79,7 @@ def insert_documents(documents: list[str]):
                 vector=embedding,
                 payload={
                     "text": doc,
+                    "tenant_id": tenant_id,
                 },
             )
         )
@@ -78,8 +91,16 @@ def insert_documents(documents: list[str]):
 
     print("✅ Documents Inserted Successfully")
 
-# Search similar documents
-def search_documents(query: str, limit: int = 3):
+
+# ======================================================
+# Search Documents
+# ======================================================
+
+def search_documents(
+    query: str,
+    tenant_id: str,
+    limit: int = 3,
+):
 
     query_vector = get_embedding(query)
 
@@ -87,6 +108,36 @@ def search_documents(query: str, limit: int = 3):
         collection_name=COLLECTION_NAME,
         query=query_vector,
         limit=limit,
+        query_filter=Filter(
+            must=[
+                FieldCondition(
+                    key="tenant_id",
+                    match=MatchValue(value=tenant_id),
+                )
+            ]
+        ),
     )
 
-    return results.points
+    documents = []
+
+    for point in results.points:
+
+        documents.append(
+            {
+                "text": point.payload["text"],
+                "score": round(point.score, 4),
+            }
+        )
+
+    return documents 
+
+
+def create_payload_index():
+
+    client.create_payload_index(
+        collection_name=COLLECTION_NAME,
+        field_name="tenant_id",
+        field_schema=PayloadSchemaType.KEYWORD,
+    )
+
+    print("✅ tenant_id payload index created")

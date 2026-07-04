@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers.chat import router as chat_router
 from app.routers.user import router as user_router
+from app.routers.search import router as search_router
 
 # ======================================================
 # Create FastAPI App
@@ -36,7 +37,7 @@ app.add_middleware(
 
 app.include_router(chat_router)
 app.include_router(user_router)
-
+app.include_router(search_router)
 # ======================================================
 # Home Route
 # ======================================================

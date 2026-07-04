@@ -1,9 +1,12 @@
 from app.services.qdrant_service import (
     create_collection,
+    create_payload_index,
     insert_documents,
 )
 
 create_collection()
+
+create_payload_index()
 
 documents = [
     "How to reset password?",
@@ -11,4 +14,7 @@ documents = [
     "Track your order from dashboard.",
 ]
 
-insert_documents(documents)
+insert_documents(
+    documents,
+    tenant_id="tenant_1",
+)
