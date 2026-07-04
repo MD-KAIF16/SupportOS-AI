@@ -1,45 +1,56 @@
 """
 chat_service.py
 
-Purpose:
+Purpose
+-------
 This file contains the BUSINESS LOGIC.
 
 Routes should NEVER contain AI logic.
 
-Today:
-    Input  -> User Message
-    Output -> "Understood"
-
-Tomorrow:
-    Input  -> User Message
-    Output -> Gemini AI Response
+Flow
+----
+Frontend
+    ↓
+Router
+    ↓
+Service Layer
+    ↓
+Gemini
+    ↓
+Frontend
 """
+
+from app.services.gemini import ask_gemini
+
 
 def generate_reply(message: str) -> str:
     """
-    Generate a chatbot reply.
+    Generate an AI chatbot reply.
 
     Parameters
     ----------
     message : str
-        Message received from the user.
+        User message received from the frontend.
 
     Returns
     -------
     str
-        Reply that will be sent back to the frontend.
+        AI-generated reply.
     """
 
-    # -------------------------------------------------
-    # Today we are NOT using the user's message.
-    #
-    # Example:
-    # message = "Hello"
-    #
-    # We are returning a fixed(dummy) response.
-    #
-    # Day 8:
-    # This line will be replaced by a Gemini API call.
-    # -------------------------------------------------
+    try:
+        # Send the user's message to Gemini
+        reply = ask_gemini(message)
 
-    return "Understood"
+        # Return Gemini's response
+        return reply
+
+    except Exception as e:
+        # Log the error for debugging
+        print(f"[Gemini Error] {e}")
+
+        # Fallback response shown to the user
+        return (
+            "Sorry! I'm unable to generate a response right now. "
+            "Please try again in a moment."
+        )
