@@ -1,3 +1,7 @@
+// ====================================
+// Send Message To FastAPI Backend
+// ====================================
+
 export async function sendMessage(message: string) {
 
   const response = await fetch(
@@ -10,17 +14,19 @@ export async function sendMessage(message: string) {
       },
 
       body: JSON.stringify({
-        user_id: "1234",      // 👈 Add this
+        user_id: "1234",
         message: message,
       }),
     }
   );
 
-  console.log("Status:", response.status);
+  // Backend error
+  if (!response.ok) {
+    throw new Error("Backend Error");
+  }
 
+  // JSON Response
   const data = await response.json();
-
-  console.log("Backend Response:", data);
 
   return data;
 }

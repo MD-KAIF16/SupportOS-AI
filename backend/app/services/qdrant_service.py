@@ -15,7 +15,7 @@ from app.core.config import (
     QDRANT_API_KEY,
 )
 
-from app.services.gemini import get_embedding
+from app.services.gemini_service import get_embedding
 
 
 # ======================================================
