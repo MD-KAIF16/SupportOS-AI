@@ -1,112 +1,56 @@
-import uuid
-from qdrant_client.models import PayloadSchemaType
-from qdrant_client import QdrantClient
 from qdrant_client.models import (
-    Distance,
-    VectorParams,
     PointStruct,
     Filter,
     FieldCondition,
     MatchValue,
 )
 
-from app.core.config import (
-    QDRANT_URL,
-    QDRANT_API_KEY,
-)
-
-from app.services.gemini_service import get_embedding
-
-
-# ======================================================
-# Qdrant Client
-# ======================================================
-
-client = QdrantClient(
-    url=QDRANT_URL,
-    api_key=QDRANT_API_KEY,
-)
+from app.core.qdrant import qdrant
 
 COLLECTION_NAME = "support_docs"
 
 
-# ======================================================
-# Create Collection
-# ======================================================
-
-def create_collection():
-
-    collections = client.get_collections().collections
-    names = [collection.name for collection in collections]
-
-    if COLLECTION_NAME not in names:
-
-        vector_size = len(get_embedding("hello"))
-
-        client.create_collection(
-            collection_name=COLLECTION_NAME,
-            vectors_config=VectorParams(
-                size=vector_size,
-                distance=Distance.COSINE,
-            ),
-        )
-
-        print("✅ Collection Created")
-
-    else:
-
-        print("✅ Collection Already Exists")
-
-
-# ======================================================
-# Insert Documents
-# ======================================================
-
-def insert_documents(
-    documents: list[str],
-    tenant_id: str = "tenant_1",
+def insert_document(
+    document_id: str,
+    tenant_id: str,
+    title: str,
+    content: str,
+    embedding: list[float],
 ):
+    """
+    Store one document vector inside Qdrant.
+    """
 
-    points = []
-
-    for doc in documents:
-
-        embedding = get_embedding(doc)
-
-        points.append(
-            PointStruct(
-                id=str(uuid.uuid4()),
-                vector=embedding,
-                payload={
-                    "text": doc,
-                    "tenant_id": tenant_id,
-                },
-            )
-        )
-
-    client.upsert(
-        collection_name=COLLECTION_NAME,
-        points=points,
+    point = PointStruct(
+        id=document_id,
+        vector=embedding,
+        payload={
+            "tenant_id": tenant_id,
+            "title": title,
+            "content": content,
+        },
     )
 
-    print("✅ Documents Inserted Successfully")
+    qdrant.upsert(
+        collection_name=COLLECTION_NAME,
+        points=[point],
+    )
 
+    print("✅ Document Stored In Qdrant")
 
-# ======================================================
-# Search Documents
-# ======================================================
 
 def search_documents(
-    query: str,
+    query_embedding: list[float],
     tenant_id: str,
     limit: int = 3,
 ):
+    """
+    Search similar documents from Qdrant.
+    """
 
-    query_vector = get_embedding(query)
-
-    results = client.query_points(
+    results = qdrant.query_points(
         collection_name=COLLECTION_NAME,
-        query=query_vector,
+        query=query_embedding,
         limit=limit,
         query_filter=Filter(
             must=[
@@ -124,20 +68,10 @@ def search_documents(
 
         documents.append(
             {
-                "text": point.payload["text"],
+                "title": point.payload["title"],
+                "content": point.payload["content"],
                 "score": round(point.score, 4),
             }
         )
 
-    return documents 
-
-
-def create_payload_index():
-
-    client.create_payload_index(
-        collection_name=COLLECTION_NAME,
-        field_name="tenant_id",
-        field_schema=PayloadSchemaType.KEYWORD,
-    )
-
-    print("✅ tenant_id payload index created")
+    return documents
