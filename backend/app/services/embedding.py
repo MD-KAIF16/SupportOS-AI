@@ -1,4 +1,5 @@
 from google import genai
+from app.core.gemini import client
 
 from app.core.config import GEMINI_API_KEY
 

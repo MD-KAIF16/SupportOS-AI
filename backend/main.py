@@ -1,25 +1,20 @@
 # ======================================================
 # SupportOS AI Backend
-# Main Application
 # ======================================================
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routers.chat import router as chat_router
-from app.routers.user import router as user_router
-from app.routers.search import router as search_router
 from app.routers.documents import router as documents_router
 
-# ======================================================
-# Create FastAPI App
-# ======================================================
+app = FastAPI(
+    title="SupportOS AI Backend",
+    version="1.0.0",
+)
 
-app = FastAPI()
-
 # ======================================================
-# CORS Configuration
-# Allows Frontend (Next.js) to communicate with Backend
+# CORS
 # ======================================================
 
 app.add_middleware(
@@ -33,15 +28,14 @@ app.add_middleware(
 )
 
 # ======================================================
-# Register Routers
+# Routers
 # ======================================================
 
-app.include_router(chat_router)
-app.include_router(user_router)
-app.include_router(search_router)
 app.include_router(documents_router)
+app.include_router(chat_router)
+
 # ======================================================
-# Home Route
+# Home
 # ======================================================
 
 @app.get("/")

@@ -1,91 +1,77 @@
 """
 chat_service.py
 
-Purpose
--------
-Contains the business logic for the chatbot.
+Purpose:
+Complete RAG Pipeline
 
 Flow
-----
-User Question
-      ↓
+
+Question
+    ↓
+Embedding
+    ↓
 Qdrant Search
-      ↓
-Filter Relevant Documents
-      ↓
+    ↓
 Build Context
-      ↓
-Build Prompt
-      ↓
+    ↓
 Gemini
-      ↓
-Final Reply
+    ↓
+Return Answer
 """
 
-from app.services.gemini_service import ask_gemini
+from app.core.gemini import client
+from app.services.embedding import generate_embedding
 from app.services.qdrant_service import search_documents
 
 
-def generate_reply(message: str) -> str:
+def chat_with_ai(question: str, tenant_id: str):
     """
-    Generate an AI response using RAG.
+    Generate AI response using RAG.
     """
 
-    try:
+    # Step 1 - Generate embedding
+    embedding = generate_embedding(question)
 
-        # Search relevant documents from Qdrant
-        documents = search_documents(
-            query=message,
-            tenant_id="tenant_1",
+    # Step 2 - Search similar documents
+    documents = search_documents(
+        query_embedding=embedding,
+        tenant_id=tenant_id,
+    )
+
+    # Step 3 - Build context
+    if documents:
+        context = "\n\n".join(
+            document["content"]
+            for document in documents
         )
+    else:
+        context = "No relevant documents found."
 
-        # Keep only high-confidence documents
-        relevant_docs = [
-            doc["text"]
-            for doc in documents
-            if doc["score"] >= 0.70
-        ]
+    # Step 4 - Build prompt
+    prompt = f"""
+You are SupportOS AI.
 
-        # No relevant documents found
-        if not relevant_docs:
-            return (
-                "I couldn't find this information "
-                "in the knowledge base."
-            )
+Use ONLY the provided context to answer.
 
-        # Convert documents into a single context
-        context = "\n\n".join(relevant_docs)
+If the answer is not found in the context, reply:
 
-        # Build the RAG prompt
-        prompt = f"""
-You are an AI Customer Support Assistant.
-
-Answer ONLY using the provided context.
-
-If the answer is not available in the context,
-reply exactly:
-
-"I couldn't find this information in the knowledge base."
-
-Never make up information.
+"I couldn't find that information in the knowledge base."
 
 Context:
 {context}
 
 Question:
-{message}
+{question}
 """
 
-        # Generate response using Gemini
-        reply = ask_gemini(prompt)
+    # Step 5 - Gemini Response
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+    )
 
-        return reply
-
-    except Exception as e:
-
-        print(f"[Gemini Error] {e}")
-
-        return (
-            "Sorry! I'm unable to generate a response right now. "
-            "Please try again in a moment."
-        )
+    # Step 6 - Return result
+    return {
+        "reply": response.text,
+        "documents": documents,
+    }

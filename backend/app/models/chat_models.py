@@ -1,46 +1,17 @@
 """
-chat_models.py
-
-Purpose:
-Define the data format (contract) between Frontend and Backend.
-
-Models NEVER contain business logic.
-They only describe what data should come in
-and what data should go out.
+Pydantic models for Chat API.
 """
 
-# Import BaseModel from Pydantic
-# BaseModel automatically validates incoming data
+from typing import Any
+
 from pydantic import BaseModel
 
 
 class ChatRequest(BaseModel):
-    """
-    Incoming request from the frontend.
-
-    Example JSON:
-    {
-        "user_id": "123",
-        "message": "Hello"
-    }
-    """
-
-    # Unique user identifier
-    user_id: str
-
-    # User's message sent to the chatbot
+    tenant_id: str
     message: str
 
 
 class ChatResponse(BaseModel):
-    """
-    Outgoing response returned to the frontend.
-
-    Example JSON:
-    {
-        "reply": "Understood"
-    }
-    """
-
-    # AI reply that will be shown in the UI
     reply: str
+    documents: list[dict[str, Any]]

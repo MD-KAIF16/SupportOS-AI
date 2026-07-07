@@ -5,7 +5,7 @@
 export async function sendMessage(message: string) {
 
   const response = await fetch(
-    "http://127.0.0.1:8000/chat",
+    "http://127.0.0.1:8000/chat/",
     {
       method: "POST",
 
@@ -14,7 +14,7 @@ export async function sendMessage(message: string) {
       },
 
       body: JSON.stringify({
-        user_id: "1234",
+        tenant_id: "83984207-48dd-453f-9fb7-cb7f18bf82e3",
         message: message,
       }),
     }
