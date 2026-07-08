@@ -5,13 +5,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+
 from app.routers.chat import router as chat_router
 from app.routers.documents import router as documents_router
+from app.core.exception_handler import register_exception_handlers
 
 app = FastAPI(
     title="SupportOS AI Backend",
     version="1.0.0",
 )
+register_exception_handlers(app)
 
 # ======================================================
 # CORS

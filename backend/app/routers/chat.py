@@ -1,18 +1,35 @@
 """
-chat.py
+=========================================================
+File: chat.py
 
 Purpose:
-Receive requests from frontend.
+Chat API Router
 
-Flow
+Responsibilities:
+1. Receive chat request
+2. Validate request
+3. Call chat service
+4. Return standard API response
+
+Data Flow
 
 Frontend
-    ↓
+      │
+      ▼
+POST /chat
+      │
+      ▼
 ChatRequest
-    ↓
-Service Layer
-    ↓
+      │
+      ▼
+chat_service.py
+      │
+      ▼
 ChatResponse
+      │
+      ▼
+APIResponse
+=========================================================
 """
 
 from fastapi import APIRouter
@@ -22,9 +39,9 @@ from app.models.chat_models import (
     ChatResponse,
 )
 
-from app.services.chat_service import (
-    chat_with_ai,
-)
+from app.models.response_model import APIResponse
+
+from app.services.chat_service import chat_with_ai
 
 router = APIRouter(
     prefix="/chat",
@@ -32,21 +49,28 @@ router = APIRouter(
 )
 
 
+# =========================================================
+# Chat Endpoint
+# =========================================================
+
 @router.post(
-    "/",
-    response_model=ChatResponse,
+    "",
+    response_model=APIResponse,
 )
 def chat(request: ChatRequest):
     """
-    Chat Endpoint
+    Generate AI response using RAG.
     """
 
+    # Call chat service
     result = chat_with_ai(
         question=request.message,
         tenant_id=request.tenant_id,
     )
 
-    return ChatResponse(
-        reply=result["reply"],
-        documents=result["documents"],
+    # Return standard API response
+    return APIResponse(
+        success=True,
+        message="Chat generated successfully.",
+        data=ChatResponse(**result),
     )

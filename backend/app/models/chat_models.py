@@ -1,17 +1,115 @@
 """
-Pydantic models for Chat API.
+=========================================================
+File: chat_models.py
+
+Purpose:
+Defines request and response models for Chat APIs.
+
+Responsibilities:
+1. Validate incoming chat requests
+2. Sanitize user input
+3. Define outgoing chat responses
+
+Data Flow
+
+Frontend
+      │
+      ▼
+ChatRequest
+      │
+      ▼
+Validation
+      │
+      ▼
+chat_service.py
+      │
+      ▼
+ChatResponse
+      │
+      ▼
+Frontend
+=========================================================
 """
 
-from typing import Any
+from pydantic import (
+    BaseModel,
+    Field,
+    field_validator,
+)
 
-from pydantic import BaseModel
 
+# =========================================================
+# Chat Request Model
+# =========================================================
 
 class ChatRequest(BaseModel):
-    tenant_id: str
-    message: str
+    """
+    Purpose:
+        Validate incoming chat request.
+    """
 
+    # -----------------------------------------------------
+    # Tenant ID
+    # -----------------------------------------------------
+
+    tenant_id: str = Field(
+        ...,
+        description="Tenant UUID",
+    )
+
+    # -----------------------------------------------------
+    # User Question
+    # -----------------------------------------------------
+
+    message: str = Field(
+        ...,
+        min_length=3,
+        max_length=2000,
+        description="User question",
+    )
+
+    # -----------------------------------------------------
+    # Validate User Message
+    # -----------------------------------------------------
+
+    @field_validator("message")
+    @classmethod
+    def validate_message(cls, value: str):
+        """
+        Remove unnecessary spaces and
+        reject empty messages.
+        """
+
+        # Remove leading and trailing spaces
+        value = value.strip()
+
+        # Reject empty message
+        if not value:
+            raise ValueError(
+                "Message cannot be empty."
+            )
+
+        return value
+
+
+# =========================================================
+# Chat Response Model
+# =========================================================
 
 class ChatResponse(BaseModel):
-    reply: str
-    documents: list[dict[str, Any]]
+    """
+    Purpose:
+        Standard response returned by chat API.
+    """
+
+    # AI Generated Reply
+    reply: str = Field(
+        ...,
+        description="AI generated response",
+    )
+
+    # Retrieved Documents
+    documents: list[dict] = Field(
+        default_factory=list,
+        description="Retrieved documents from Qdrant",
+    )

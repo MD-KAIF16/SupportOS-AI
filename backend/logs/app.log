@@ -1,0 +1,120 @@
+2026-07-08 14:28:23,631 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-08 14:28:30,235 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-08 14:34:30,699 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/support_documents "HTTP/2 201 Created"
+2026-07-08 14:34:30,711 | INFO | SupportOS | Generating embedding...
+2026-07-08 14:34:31,311 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/text-embedding-004:batchEmbedContents "HTTP/1.1 404 Not Found"
+2026-07-08 14:34:31,313 | ERROR | SupportOS | Embedding generation failed: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/text-embedding-004 is not found for API version v1beta, or is not supported for embedContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-07-08 14:34:31,313 | ERROR | SupportOS | Failed to generate embedding: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'models/text-embedding-004 is not found for API version v1beta, or is not supported for embedContent. Call ModelService.ListModels to see the list of available models and their supported methods.', 'status': 'NOT_FOUND'}}
+2026-07-08 14:41:24,254 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-08 14:41:34,062 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-08 14:41:47,262 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/support_documents "HTTP/2 201 Created"
+2026-07-08 14:41:47,297 | INFO | SupportOS | Generating embedding...
+2026-07-08 14:41:47,905 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-08 14:41:47,930 | INFO | SupportOS | Embedding generated successfully.
+2026-07-08 14:41:47,930 | INFO | SupportOS | Storing document 'Refund Policy' in Qdrant...
+2026-07-08 14:41:49,534 | INFO | httpx | HTTP Request: PUT https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points?wait=true "HTTP/1.1 200 OK"
+2026-07-08 14:41:49,537 | INFO | SupportOS | Document stored successfully in Qdrant.
+2026-07-08 14:58:17,567 | INFO | SupportOS | New chat request received for tenant: 83984207-48dd-453f-9fb7-cb7f18bf82e3
+2026-07-08 14:58:17,568 | INFO | SupportOS | Generating embedding...
+2026-07-08 14:58:17,568 | INFO | SupportOS | Generating embedding...
+2026-07-08 14:58:18,529 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-08 14:58:18,561 | INFO | SupportOS | Embedding generated successfully.
+2026-07-08 14:58:18,561 | INFO | SupportOS | Searching relevant documents...
+2026-07-08 14:58:18,562 | INFO | SupportOS | Searching top 3 document(s) for tenant: 83984207-48dd-453f-9fb7-cb7f18bf82e3
+2026-07-08 14:58:20,121 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-08 14:58:20,129 | INFO | SupportOS | Skipping document with low score: 0.7156
+2026-07-08 14:58:20,129 | INFO | SupportOS | Skipping document with low score: 0.537
+2026-07-08 14:58:20,130 | INFO | SupportOS | Retrieved 0 high-quality document(s).
+2026-07-08 14:58:20,130 | WARNING | SupportOS | No relevant documents found.
+2026-07-08 15:01:05,728 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-08 15:01:36,249 | INFO | SupportOS | New chat request received for tenant: 83984207-48dd-453f-9fb7-cb7f18bf82e3
+2026-07-08 15:01:36,250 | INFO | SupportOS | Generating embedding...
+2026-07-08 15:01:36,250 | INFO | SupportOS | Generating embedding...
+2026-07-08 15:01:37,192 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-08 15:01:37,223 | INFO | SupportOS | Embedding generated successfully.
+2026-07-08 15:01:37,224 | INFO | SupportOS | Searching relevant documents...
+2026-07-08 15:01:37,224 | INFO | SupportOS | Searching top 3 document(s) for tenant: 83984207-48dd-453f-9fb7-cb7f18bf82e3
+2026-07-08 15:01:38,834 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-08 15:01:38,836 | INFO | SupportOS | Accepted document with score: 0.7156
+2026-07-08 15:01:38,836 | INFO | SupportOS | Skipping document with low score: 0.537
+2026-07-08 15:01:38,836 | INFO | SupportOS | Retrieved 1 high-quality document(s).
+2026-07-08 15:01:38,837 | INFO | SupportOS | Building prompt context...
+2026-07-08 15:01:38,837 | INFO | SupportOS | Generating AI response...
+2026-07-08 15:01:38,837 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-08 15:01:40,136 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-08 15:01:40,137 | INFO | SupportOS | AI response generated successfully.
+2026-07-08 15:01:40,138 | INFO | SupportOS | Returning chat response.
+2026-07-08 15:01:40,144 | ERROR | SupportOS | 1 validation error:
+  {'type': 'missing', 'loc': ('response', 'reply'), 'msg': 'Field required', 'input': APIResponse(success=True, message='Chat generated successfully.', data=ChatResponse(reply='Customers can request a refund within 7 days of purchase. The refund will be processed to the original payment method.', documents=[{'title': 'Refund Policy', 'content': 'Customers can request a refund within 7 days of purchase. The refund will be processed to the original payment method.', 'score': 0.7156}]))}
+
+  File "C:\Users\user\SupportOS-AI\backend\app\routers\chat.py", line 24, in chat
+    POST /chat
+Traceback (most recent call last):
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\fastapi\routing.py", line 2531, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\fastapi\routing.py", line 1700, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\fastapi\routing.py", line 2586, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\fastapi\routing.py", line 1720, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\fastapi\routing.py", line 1239, in handle
+    await app(scope, receive, send)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\fastapi\routing.py", line 150, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\fastapi\routing.py", line 136, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\fastapi\routing.py", line 711, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\fastapi\routing.py", line 316, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'missing', 'loc': ('response', 'reply'), 'msg': 'Field required', 'input': APIResponse(success=True, message='Chat generated successfully.', data=ChatResponse(reply='Customers can request a refund within 7 days of purchase. The refund will be processed to the original payment method.', documents=[{'title': 'Refund Policy', 'content': 'Customers can request a refund within 7 days of purchase. The refund will be processed to the original payment method.', 'score': 0.7156}]))}
+
+  File "C:\Users\user\SupportOS-AI\backend\app\routers\chat.py", line 24, in chat
+    POST /chat
+2026-07-08 15:07:41,243 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-08 15:07:53,257 | INFO | SupportOS | New chat request received for tenant: 83984207-48dd-453f-9fb7-cb7f18bf82e3
+2026-07-08 15:07:53,257 | INFO | SupportOS | Generating embedding...
+2026-07-08 15:07:53,258 | INFO | SupportOS | Generating embedding...
+2026-07-08 15:07:54,170 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-08 15:07:54,196 | INFO | SupportOS | Embedding generated successfully.
+2026-07-08 15:07:54,197 | INFO | SupportOS | Searching relevant documents...
+2026-07-08 15:07:54,198 | INFO | SupportOS | Searching top 3 document(s) for tenant: 83984207-48dd-453f-9fb7-cb7f18bf82e3
+2026-07-08 15:07:55,832 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-08 15:07:55,834 | INFO | SupportOS | Accepted document with score: 0.7156
+2026-07-08 15:07:55,834 | INFO | SupportOS | Skipping document with low score: 0.537
+2026-07-08 15:07:55,834 | INFO | SupportOS | Retrieved 1 high-quality document(s).
+2026-07-08 15:07:55,834 | INFO | SupportOS | Building prompt context...
+2026-07-08 15:07:55,835 | INFO | SupportOS | Generating AI response...
+2026-07-08 15:07:55,835 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-08 15:07:57,322 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-08 15:07:57,325 | INFO | SupportOS | AI response generated successfully.
+2026-07-08 15:07:57,325 | INFO | SupportOS | Returning chat response.
