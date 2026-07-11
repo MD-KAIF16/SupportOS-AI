@@ -7,11 +7,11 @@ Chat API Router
 
 Responsibilities:
 1. Receive chat request
-2. Validate request
-3. Call chat service
-4. Return standard API response
+2. Create shared state
+3. Execute LangGraph
+4. Return API response
 
-Data Flow
+Flow
 
 Frontend
       │
@@ -19,16 +19,19 @@ Frontend
 POST /chat
       │
       ▼
-ChatRequest
+graph.invoke()
       │
       ▼
-chat_service.py
+Orchestrator
       │
       ▼
-ChatResponse
+Knowledge Agent
       │
       ▼
-APIResponse
+Judge Agent
+      │
+      ▼
+API Response
 =========================================================
 """
 
@@ -41,7 +44,8 @@ from app.models.chat_models import (
 
 from app.models.response_model import APIResponse
 
-from app.services.chat_service import chat_with_ai
+# LangGraph Workflow
+from app.agents.graph import graph
 
 router = APIRouter(
     prefix="/chat",
@@ -58,19 +62,35 @@ router = APIRouter(
     response_model=APIResponse,
 )
 def chat(request: ChatRequest):
-    """
-    Generate AI response using RAG.
-    """
 
-    # Call chat service
-    result = chat_with_ai(
-        question=request.message,
-        tenant_id=request.tenant_id,
-    )
+    # -----------------------------------------
+    # Create Shared State
+    # -----------------------------------------
 
-    # Return standard API response
+    state = {
+        "tenant_id": request.tenant_id,
+        "question": request.message,
+        "context": "",
+        "documents": [],
+        "draft_answer": "",
+        "final_answer": "",
+    }
+
+    # -----------------------------------------
+    # Execute Multi-Agent Workflow
+    # -----------------------------------------
+
+    result = graph.invoke(state)
+
+    # -----------------------------------------
+    # Return Final Response
+    # -----------------------------------------
+
     return APIResponse(
         success=True,
         message="Chat generated successfully.",
-        data=ChatResponse(**result),
+        data=ChatResponse(
+            reply=result["final_answer"],
+            documents=result["documents"],
+        ),
     )

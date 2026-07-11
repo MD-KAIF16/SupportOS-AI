@@ -1,12 +1,53 @@
-from app.agents.orchestrator import SupportState
+"""
+=========================================================
+File: judge_agent.py
+
+Purpose:
+Judge Agent
+
+Responsibilities:
+1. Read draft answer
+2. Review answer
+3. Save final answer
+
+Flow
+
+Draft Answer
+      │
+      ▼
+Judge Agent
+      │
+      ▼
+Final Answer
+=========================================================
+"""
 
 
-def judge_agent(state: SupportState):
+# =========================================================
+# Judge Agent
+# =========================================================
+
+def judge_agent(state):
+
     print("⚖️ Judge Agent Started")
 
-    draft = state["draft_answer"]
+    # -----------------------------------------
+    # Read Draft Answer
+    # -----------------------------------------
 
-    # Abhi dummy review
-    state["final_answer"] = draft + " (Reviewed)"
+    draft_answer = state["draft_answer"]
+
+    # -----------------------------------------
+    # Day 17
+    # Future me yaha AI review hoga
+    # Hallucination check
+    # Fact checking
+    # Grammar improvement
+    # -----------------------------------------
+
+    final_answer = draft_answer
+
+    # Save Final Answer
+    state["final_answer"] = final_answer
 
     return state
