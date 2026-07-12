@@ -118,3 +118,37 @@ fastapi.exceptions.ResponseValidationError: 1 validation error:
 2026-07-08 15:07:57,322 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
 2026-07-08 15:07:57,325 | INFO | SupportOS | AI response generated successfully.
 2026-07-08 15:07:57,325 | INFO | SupportOS | Returning chat response.
+2026-07-12 11:34:41,595 | INFO | SupportOS | Generating embedding...
+2026-07-12 11:34:42,113 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-12 11:34:42,566 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-12 11:34:42,577 | INFO | SupportOS | Embedding generated successfully.
+2026-07-12 11:34:42,577 | INFO | SupportOS | Searching top 3 document(s) for tenant: 83984207-48dd-453f-9fb7-cb7f18bf82e3
+2026-07-12 11:34:44,070 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-12 11:34:44,071 | INFO | SupportOS | Accepted document with score: 0.7156
+2026-07-12 11:34:44,072 | INFO | SupportOS | Skipping document with low score: 0.537
+2026-07-12 11:34:44,072 | INFO | SupportOS | Retrieved 1 high-quality document(s).
+2026-07-12 11:34:44,072 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-12 11:34:45,489 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-12 11:35:04,920 | INFO | SupportOS | Generating embedding...
+2026-07-12 11:35:05,569 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-12 11:35:05,831 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-12 11:35:05,858 | INFO | SupportOS | Embedding generated successfully.
+2026-07-12 11:35:05,859 | INFO | SupportOS | Searching top 3 document(s) for tenant: 83984207-48dd-453f-9fb7-cb7f18bf82e3
+2026-07-12 11:35:09,314 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-12 11:35:09,321 | INFO | SupportOS | Accepted document with score: 0.7156
+2026-07-12 11:35:09,321 | INFO | SupportOS | Skipping document with low score: 0.537
+2026-07-12 11:35:09,321 | INFO | SupportOS | Retrieved 1 high-quality document(s).
+2026-07-12 11:35:09,322 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-12 11:35:11,088 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-12 11:36:13,010 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-12 11:37:24,270 | INFO | SupportOS | Generating embedding...
+2026-07-12 11:37:25,171 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-12 11:37:25,204 | INFO | SupportOS | Embedding generated successfully.
+2026-07-12 11:37:25,205 | INFO | SupportOS | Searching top 3 document(s) for tenant: 83984207-48dd-453f-9fb7-cb7f18bf82e3
+2026-07-12 11:37:25,282 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-12 11:37:27,233 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-12 11:37:27,240 | INFO | SupportOS | Accepted document with score: 0.7132
+2026-07-12 11:37:27,241 | INFO | SupportOS | Skipping document with low score: 0.5216
+2026-07-12 11:37:27,241 | INFO | SupportOS | Retrieved 1 high-quality document(s).
+2026-07-12 11:37:27,241 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-12 11:37:29,182 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"

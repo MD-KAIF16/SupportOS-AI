@@ -22,45 +22,53 @@ Knowledge Agent
 =========================================================
 """
 
-from typing import TypedDict
+from langgraph.graph import MessagesState
 
 
 # =========================================================
 # Shared State
 # =========================================================
 
-class SupportState(TypedDict):
+class SupportState(MessagesState):
 
     # Tenant Identifier
-    tenant_id: str
+    tenant_id: str = ""
 
-    # User Question
-    question: str
+    # Latest User Question
+    question: str = ""
 
     # Retrieved Context
-    context: str
+    context: str = ""
 
     # Retrieved Documents
-    documents: list
+    documents: list = []
 
     # Knowledge Agent Output
-    draft_answer: str
+    draft_answer: str = ""
 
     # Judge Agent Output
-    final_answer: str
+    final_answer: str = ""
 
 
 # =========================================================
 # Orchestrator Agent
 # =========================================================
 
-def orchestrator(state):
+def orchestrator(state: SupportState):
 
-    print("📌 Orchestrator Agent Started")
+      print("\n📌 Orchestrator Agent Started")
 
-    # Future:
-    # - Intent Detection
-    # - Agent Selection
-    # - Workflow Routing
+      # Get latest user message
+      last_message = state["messages"][-1]
 
-    return state
+      # Store latest question
+      state["question"] = last_message.content
+      
+      print(f"Question : {state['question']}")
+
+      # Future:
+      # - Intent Detection
+      # - Agent Selection
+      # - Workflow Routing
+
+      return state
