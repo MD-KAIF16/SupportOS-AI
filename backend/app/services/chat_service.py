@@ -13,30 +13,13 @@ Responsibilities:
 5. Generate AI response
 6. Return final response
 
-Data Flow
-
-User Question
-        │
-        ▼
-Generate Embedding
-        │
-        ▼
-Search Qdrant
-        │
-        ▼
-Relevant Documents
-        │
-        ▼
-Build Context
-        │
-        ▼
-Gemini Prompt
-        │
-        ▼
-Generate Response
-        │
-        ▼
-Frontend
+Day 19 Improvements
+-------------------
+✓ Embedding Error Handling
+✓ Qdrant Error Handling
+✓ Empty Retrieval Fallback
+✓ Gemini Error Handling
+✓ Graceful Degradation
 =========================================================
 """
 
@@ -46,11 +29,6 @@ from app.core.logger import logger
 from app.services.embedding import generate_embedding
 from app.services.qdrant_service import search_documents
 
-from app.core.exceptions import (
-    ChatGenerationException,
-    DocumentNotFoundException,
-)
-
 
 # =========================================================
 # Chat With AI
@@ -58,34 +36,8 @@ from app.core.exceptions import (
 
 def chat_with_ai(question: str, tenant_id: str):
     """
-    Purpose:
-        Generate AI response using Retrieval-Augmented Generation.
-
-    Parameters
-    ----------
-    question : str
-        User's question.
-
-    tenant_id : str
-        Tenant identifier used for document isolation.
-
-    Returns
-    -------
-    dict
-        {
-            "reply": AI Generated Response,
-            "documents": Retrieved Documents
-        }
-
-    Raises
-    ------
-    DocumentNotFoundException
-    ChatGenerationException
+    Generate AI response using Retrieval-Augmented Generation (RAG).
     """
-
-    # -----------------------------------------------------
-    # Log incoming request
-    # -----------------------------------------------------
 
     logger.info(
         f"New chat request received for tenant: {tenant_id}"
@@ -95,51 +47,77 @@ def chat_with_ai(question: str, tenant_id: str):
     # Step 1 - Generate Embedding
     # -----------------------------------------------------
 
-    logger.info("Generating embedding...")
+    try:
 
-    embedding = generate_embedding(question)
+        logger.info("Generating embedding...")
+
+        embedding = generate_embedding(question)
+
+    except Exception as e:
+
+        logger.error(
+            f"Embedding Generation Failed: {str(e)}"
+        )
+
+        return {
+            "reply": (
+                "I'm sorry, I couldn't process your question. "
+                "Please try again."
+            ),
+            "documents": [],
+        }
 
     # -----------------------------------------------------
-    # Step 2 - Search Similar Documents
+    # Step 2 - Search Documents
     # -----------------------------------------------------
 
-    logger.info("Searching relevant documents...")
+    try:
 
-    documents = search_documents(
-        query_embedding=embedding,
-        tenant_id=tenant_id,
-    )
+        logger.info("Searching relevant documents...")
+
+        documents = search_documents(
+            query_embedding=embedding,
+            tenant_id=tenant_id,
+        )
+
+    except Exception as e:
+
+        logger.error(
+            f"Qdrant Search Failed: {str(e)}"
+        )
+
+        documents = []
 
     # -----------------------------------------------------
-    # Step 3 - Handle Empty Retrieval
+    # Step 3 - Build Context
     # -----------------------------------------------------
 
-    if not documents:
+    if documents:
+
+        logger.info(
+            f"{len(documents)} document(s) retrieved."
+        )
+
+        context = "\n\n".join(
+            document["content"]
+            for document in documents
+        )
+
+    else:
 
         logger.warning(
-            "No relevant documents found."
+            "No relevant documents found. Using fallback."
         )
 
-        raise DocumentNotFoundException(
-            "No relevant documents found."
-        )
+        context = ""
 
     # -----------------------------------------------------
-    # Step 4 - Build Context
+    # Step 4 - Build Prompt
     # -----------------------------------------------------
 
-    logger.info("Building prompt context...")
+    if context:
 
-    context = "\n\n".join(
-        document["content"]
-        for document in documents
-    )
-
-    # -----------------------------------------------------
-    # Step 5 - Build Prompt
-    # -----------------------------------------------------
-
-    prompt = f"""
+        prompt = f"""
 You are SupportOS AI.
 
 Use ONLY the provided context to answer the user's question.
@@ -155,13 +133,31 @@ Question:
 {question}
 """
 
-    # -----------------------------------------------------
-    # Step 6 - Generate AI Response
-    # -----------------------------------------------------
+    else:
 
-    logger.info("Generating AI response...")
+        prompt = f"""
+You are SupportOS AI.
+
+No relevant documents were found in the knowledge base.
+
+If you know the answer confidently,
+answer briefly.
+
+Otherwise reply:
+
+"I couldn't find that information in the knowledge base."
+
+Question:
+{question}
+"""
+
+    # -----------------------------------------------------
+    # Step 5 - Generate AI Response
+    # -----------------------------------------------------
 
     try:
+
+        logger.info("Generating AI response...")
 
         response = client.models.generate_content(
             model="gemini-2.5-flash",
@@ -172,23 +168,26 @@ Question:
             "AI response generated successfully."
         )
 
+        reply = response.text
+
     except Exception as e:
 
         logger.error(
-            f"Gemini generation failed: {str(e)}"
+            f"Gemini Generation Failed: {str(e)}"
         )
 
-        raise ChatGenerationException(
-            f"Failed to generate response: {str(e)}"
+        reply = (
+            "I'm sorry, I'm unable to answer right now. "
+            "Please try again after some time."
         )
 
     # -----------------------------------------------------
-    # Step 7 - Return Final Response
+    # Step 6 - Return Response
     # -----------------------------------------------------
 
     logger.info("Returning chat response.")
 
     return {
-        "reply": response.text,
+        "reply": reply,
         "documents": documents,
     }

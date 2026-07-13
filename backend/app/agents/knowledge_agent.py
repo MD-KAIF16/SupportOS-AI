@@ -57,28 +57,42 @@ def knowledge_agent(state):
 
     tenant_id = state["tenant_id"]
 
-    # Latest user message from MessagesState
+    # Latest User Message
     question = state["messages"][-1].content
 
     state["question"] = question
 
     # -----------------------------------------
-    # Tool Call
+    # Retrieve Context
     # -----------------------------------------
 
-    documents = get_context(
-        query=question,
-        tenant_id=tenant_id,
-    )
+    try:
+
+        documents = get_context(
+            query=question,
+            tenant_id=tenant_id,
+        )
+
+    except Exception as e:
+
+        print(f"❌ Context Retrieval Failed: {e}")
+
+        documents = []
 
     # -----------------------------------------
     # Build Context
     # -----------------------------------------
 
-    context = "\n\n".join(
-        doc["content"]
-        for doc in documents
-    )
+    if documents:
+
+        context = "\n\n".join(
+            doc["content"]
+            for doc in documents
+        )
+
+    else:
+
+        context = ""
 
     state["documents"] = documents
     state["context"] = context
@@ -87,7 +101,9 @@ def knowledge_agent(state):
     # Build Prompt
     # -----------------------------------------
 
-    prompt = f"""
+    if context:
+
+        prompt = f"""
 You are SupportOS AI.
 
 Previous Conversation:
@@ -106,21 +122,57 @@ Current Question:
 {question}
 """
 
+    else:
+
+        prompt = f"""
+You are SupportOS AI.
+
+Previous Conversation:
+{state["messages"]}
+
+No relevant knowledge was retrieved from the knowledge base.
+
+If you know the answer confidently, answer briefly.
+
+Otherwise reply:
+
+"I couldn't find that information in the knowledge base."
+
+Current Question:
+{question}
+"""
+
     # -----------------------------------------
     # Generate AI Response
     # -----------------------------------------
 
-    answer = ask_gemini(prompt)
+    try:
 
+        answer = ask_gemini(prompt)
+
+    except Exception as e:
+
+        print(f"❌ Gemini Error: {e}")
+
+        answer = (
+            "I'm sorry, I'm unable to answer right now. "
+            "Please try again after some time."
+        )
+
+    # -----------------------------------------
     # Save Draft Answer
+    # -----------------------------------------
+
     state["draft_answer"] = answer
 
     # -----------------------------------------
-    # Save Response in Memory
+    # Save Response in Conversation Memory
     # -----------------------------------------
 
     state["messages"].append(
         AIMessage(content=answer)
     )
+
+    print("✅ Knowledge Agent Finished")
 
     return state
