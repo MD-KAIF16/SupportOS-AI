@@ -37,6 +37,9 @@ API Response
 
 from fastapi import APIRouter
 
+# LangGraph Message
+from langchain_core.messages import HumanMessage
+
 from app.models.chat_models import (
     ChatRequest,
     ChatResponse,
@@ -63,28 +66,51 @@ router = APIRouter(
 )
 def chat(request: ChatRequest):
 
-    # -----------------------------------------
+    # -----------------------------------------------------
     # Create Shared State
-    # -----------------------------------------
+    # -----------------------------------------------------
 
     state = {
+        # Conversation History
+        "messages": [
+            HumanMessage(content=request.message)
+        ],
+
+        # Tenant
         "tenant_id": request.tenant_id,
-        "question": request.message,
+
+        # Latest Question
+        "question": "",
+
+        # Retrieved Context
         "context": "",
+
+        # Retrieved Documents
         "documents": [],
+
+        # Knowledge Agent Output
         "draft_answer": "",
+
+        # Judge Agent Output
         "final_answer": "",
+
+        # Future Routing
+        "next_agent": "knowledge_agent",
     }
 
-    # -----------------------------------------
-    # Execute Multi-Agent Workflow
-    # -----------------------------------------
+    print("\n🚀 Starting LangGraph Workflow...")
+
+    # -----------------------------------------------------
+    # Execute Workflow
+    # -----------------------------------------------------
 
     result = graph.invoke(state)
 
-    # -----------------------------------------
-    # Return Final Response
-    # -----------------------------------------
+    print("✅ Workflow Finished")
+
+    # -----------------------------------------------------
+    # Return API Response
+    # -----------------------------------------------------
 
     return APIResponse(
         success=True,
