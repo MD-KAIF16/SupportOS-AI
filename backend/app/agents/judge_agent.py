@@ -29,7 +29,7 @@ Final Answer
 
 def judge_agent(state):
 
-    print("⚖️ Judge Agent Started")
+    print("\n⚖️ Judge Agent Started")
 
     # -----------------------------------------
     # Read Draft Answer
@@ -38,16 +38,17 @@ def judge_agent(state):
     draft_answer = state["draft_answer"]
 
     # -----------------------------------------
-    # Day 17
-    # Future me yaha AI review hoga
-    # Hallucination check
-    # Fact checking
-    # Grammar improvement
+    # Future
+    # AI Review
+    # Hallucination Check
+    # Grammar Improvement
     # -----------------------------------------
 
     final_answer = draft_answer
 
     # Save Final Answer
     state["final_answer"] = final_answer
+
+    print("✅ Judge Agent Finished")
 
     return state
