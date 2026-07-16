@@ -10,34 +10,10 @@ Responsibilities:
 2. Create shared state
 3. Execute LangGraph
 4. Return API response
-
-Flow
-
-Frontend
-      │
-      ▼
-POST /chat
-      │
-      ▼
-graph.invoke()
-      │
-      ▼
-Orchestrator
-      │
-      ▼
-Knowledge Agent
-      │
-      ▼
-Judge Agent
-      │
-      ▼
-API Response
 =========================================================
 """
 
 from fastapi import APIRouter
-
-# LangGraph Message
 from langchain_core.messages import HumanMessage
 
 from app.models.chat_models import (
@@ -47,8 +23,8 @@ from app.models.chat_models import (
 
 from app.models.response_model import APIResponse
 
-# LangGraph Workflow
 from app.agents.graph import graph
+
 
 router = APIRouter(
     prefix="/chat",
@@ -71,30 +47,31 @@ def chat(request: ChatRequest):
     # -----------------------------------------------------
 
     state = {
+
         # Conversation History
         "messages": [
             HumanMessage(content=request.message)
         ],
 
-        # Tenant
+        # User Information
         "tenant_id": request.tenant_id,
+        "user_id": request.user_id,
 
-        # Latest Question
+        # User Question
         "question": "",
+
+        # Digital Twin
+        "user_profile": {},
 
         # Retrieved Context
         "context": "",
-
-        # Retrieved Documents
         "documents": [],
 
-        # Knowledge Agent Output
+        # AI Responses
         "draft_answer": "",
-
-        # Judge Agent Output
         "final_answer": "",
 
-        # Future Routing
+        # Workflow
         "next_agent": "knowledge_agent",
     }
 

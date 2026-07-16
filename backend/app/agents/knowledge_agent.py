@@ -7,14 +7,12 @@ Knowledge Agent
 
 Responsibilities:
 1. Receive user question
-2. Retrieve relevant documents from Qdrant
-3. Build prompt using retrieved context
-4. Send prompt to Gemini
-5. Store draft answer in shared state
-6. Save AI response into conversation memory
-
-Day 20 Update:
-- get_context() is now registered as a LangChain Tool
+2. Load User Digital Twin
+3. Retrieve relevant documents from Qdrant
+4. Build personalized prompt
+5. Send prompt to Gemini
+6. Store draft answer
+7. Save AI response into memory
 =========================================================
 """
 
@@ -22,19 +20,12 @@ Day 20 Update:
 # Imports
 # =========================================================
 
-# Used to store AI response in conversation memory
 from langchain_core.messages import AIMessage
-
-# Used to convert a Python function into a LangChain Tool
 from langchain.tools import tool
 
-# Generate embedding for user query
+from app.services.profile_service import get_profile
 from app.services.embedding import generate_embedding
-
-# Search relevant documents from Qdrant
 from app.services.qdrant_service import search_documents
-
-# Call Gemini model
 from app.services.gemini_service import ask_gemini
 
 
@@ -45,19 +36,13 @@ from app.services.gemini_service import ask_gemini
 @tool
 def get_context(query: str, tenant_id: str):
     """
-    LangChain Tool
-
-    Responsibility:
-    Search the knowledge base and return
-    relevant documents.
+    Search Qdrant Knowledge Base.
     """
 
     print("🔍 Searching Knowledge Base...")
 
-    # Convert question into embedding
     embedding = generate_embedding(query)
 
-    # Search similar documents in Qdrant
     documents = search_documents(
         query_embedding=embedding,
         tenant_id=tenant_id,
@@ -67,12 +52,9 @@ def get_context(query: str, tenant_id: str):
 
 
 # =========================================================
-# Register Available Tools
+# Register Tools
 # =========================================================
 
-# Future:
-# Orchestrator can dynamically choose
-# which tool should be executed.
 tools = [
     get_context
 ]
@@ -90,14 +72,28 @@ def knowledge_agent(state):
     # Read Shared State
     # -----------------------------------------------------
 
-    # Read tenant id
     tenant_id = state["tenant_id"]
+    user_id = state["user_id"]
 
-    # Read latest user message
     question = state["messages"][-1].content
 
-    # Save question inside shared state
     state["question"] = question
+
+    # -----------------------------------------------------
+    # Load User Profile
+    # -----------------------------------------------------
+
+    try:
+
+        profile = get_profile(user_id)
+
+    except Exception as e:
+
+        print(f"❌ Profile Load Error: {e}")
+
+        profile = {}
+
+    state["user_profile"] = profile
 
     # -----------------------------------------------------
     # Retrieve Context
@@ -105,7 +101,6 @@ def knowledge_agent(state):
 
     try:
 
-        # Execute LangChain Tool
         documents = get_context.invoke(
             {
                 "query": question,
@@ -125,7 +120,6 @@ def knowledge_agent(state):
 
     if documents:
 
-        # Merge all retrieved documents
         context = "\n\n".join(
             doc["content"]
             for doc in documents
@@ -135,9 +129,25 @@ def knowledge_agent(state):
 
         context = ""
 
-    # Save retrieved data
     state["documents"] = documents
     state["context"] = context
+
+    # -----------------------------------------------------
+    # User Profile Context
+    # -----------------------------------------------------
+
+    profile_context = ""
+
+    if profile:
+
+        profile_context = f"""
+User Profile
+
+Name: {profile.get("full_name", "Unknown")}
+Company: {profile.get("company", "Unknown")}
+Preferred Language: {profile.get("preferred_language", "English")}
+Preferred Tone: {profile.get("preferred_tone", "Friendly")}
+"""
 
     # -----------------------------------------------------
     # Build Prompt
@@ -147,6 +157,8 @@ def knowledge_agent(state):
 
         prompt = f"""
 You are SupportOS AI.
+
+{profile_context}
 
 Previous Conversation:
 {state["messages"]}
@@ -162,12 +174,16 @@ Context:
 
 Current Question:
 {question}
+
+Answer according to the user's preferred language and preferred tone.
 """
 
     else:
 
         prompt = f"""
 You are SupportOS AI.
+
+{profile_context}
 
 Previous Conversation:
 {state["messages"]}
@@ -182,6 +198,8 @@ Otherwise reply:
 
 Current Question:
 {question}
+
+Answer according to the user's preferred language and preferred tone.
 """
 
     # -----------------------------------------------------
@@ -208,7 +226,7 @@ Current Question:
     state["draft_answer"] = answer
 
     # -----------------------------------------------------
-    # Save AI Response into Conversation Memory
+    # Save AI Response into Memory
     # -----------------------------------------------------
 
     state["messages"].append(

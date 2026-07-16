@@ -44,8 +44,7 @@ from pydantic import (
 
 class ChatRequest(BaseModel):
     """
-    Purpose:
-        Validate incoming chat request.
+    Validate incoming chat request.
     """
 
     # -----------------------------------------------------
@@ -55,6 +54,15 @@ class ChatRequest(BaseModel):
     tenant_id: str = Field(
         ...,
         description="Tenant UUID",
+    )
+
+    # -----------------------------------------------------
+    # User ID
+    # -----------------------------------------------------
+
+    user_id: str = Field(
+        ...,
+        description="User UUID",
     )
 
     # -----------------------------------------------------
@@ -80,10 +88,8 @@ class ChatRequest(BaseModel):
         reject empty messages.
         """
 
-        # Remove leading and trailing spaces
         value = value.strip()
 
-        # Reject empty message
         if not value:
             raise ValueError(
                 "Message cannot be empty."
@@ -98,8 +104,7 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     """
-    Purpose:
-        Standard response returned by chat API.
+    Standard response returned by chat API.
     """
 
     # AI Generated Reply

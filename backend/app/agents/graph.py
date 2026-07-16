@@ -25,23 +25,12 @@ Judge Agent
    │
    ▼
 END
-
-Future Flow
-
-START
-   │
-   ▼
-Orchestrator
-   │
-   ├──────────────► Knowledge Agent
-   │
-   ├──────────────► Order Agent
-   │
-   ├──────────────► Billing Agent
-   │
-   └──────────────► Escalation Agent
 =========================================================
 """
+
+# =========================================================
+# Imports
+# =========================================================
 
 from langgraph.graph import (
     StateGraph,
@@ -49,11 +38,9 @@ from langgraph.graph import (
     END,
 )
 
-from app.agents.orchestrator import (
-    SupportState,
-    orchestrator,
-)
+from app.agents.state import SupportState
 
+from app.agents.orchestrator import orchestrator
 from app.agents.knowledge_agent import knowledge_agent
 from app.agents.judge_agent import judge_agent
 
@@ -89,27 +76,21 @@ builder.add_node(
 # Workflow
 # =========================================================
 
-# Workflow Start
 builder.add_edge(
     START,
     "orchestrator",
 )
 
-# Current Routing
-# Future:
-# builder.add_conditional_edges(...)
 builder.add_edge(
     "orchestrator",
     "knowledge_agent",
 )
 
-# Knowledge -> Judge
 builder.add_edge(
     "knowledge_agent",
     "judge_agent",
 )
 
-# Finish Workflow
 builder.add_edge(
     "judge_agent",
     END,
