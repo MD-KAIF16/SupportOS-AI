@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.models.search import SearchRequest
+from app.models.search_models import SearchRequest
 from app.services.qdrant_service import search_documents
 
 router = APIRouter(

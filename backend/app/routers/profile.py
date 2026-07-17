@@ -3,24 +3,16 @@
 File: profile.py
 
 Purpose:
-User Profile APIs.
-
-Endpoints:
-1. Create Profile
-2. Get Profile
+User Profile APIs
 =========================================================
 """
 
-from fastapi import APIRouter
+from uuid import UUID
 
-from app.models.response_model import APIResponse
-from app.models.user_profile import (
-    UserProfileRequest,
-)
-from app.services.profile_service import (
-    create_profile,
-    get_profile,
-)
+from fastapi import APIRouter, HTTPException
+
+from app.models.response_models import APIResponse
+from app.services.profile_service import profile_service
 
 router = APIRouter(
     prefix="/profile",
@@ -29,48 +21,36 @@ router = APIRouter(
 
 
 # =========================================================
-# Create Profile
-# =========================================================
-
-@router.post(
-    "",
-    response_model=APIResponse,
-)
-async def create_user_profile(
-    profile: UserProfileRequest,
-):
-    """
-    Create user profile.
-    """
-
-    data = create_profile(profile)
-
-    return APIResponse(
-        success=True,
-        message="Profile created successfully.",
-        data=data,
-    )
-
-
-# =========================================================
 # Get Profile
 # =========================================================
 
 @router.get(
-    "/{user_id}",
+    "/{tenant_id}/{user_id}",
     response_model=APIResponse,
 )
 async def get_user_profile(
-    user_id: str,
+    tenant_id: UUID,
+    user_id: UUID,
 ):
     """
     Fetch user profile.
     """
 
-    data = get_profile(user_id)
+    try:
 
-    return APIResponse(
-        success=True,
-        message="Profile fetched successfully.",
-        data=data,
-    )
+        profile = profile_service.get_profile(
+            user_id=user_id,
+            tenant_id=tenant_id,
+        )
+
+        return APIResponse(
+            success=True,
+            message="Profile fetched successfully.",
+            data=profile,
+        )
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )

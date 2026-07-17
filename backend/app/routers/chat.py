@@ -3,28 +3,43 @@
 File: chat.py
 
 Purpose:
-Chat API Router
+Chat API endpoint.
 
-Responsibilities:
-1. Receive chat request
-2. Create shared state
-3. Execute LangGraph
-4. Return API response
+Flow
+
+Frontend
+      │
+      ▼
+Chat Router
+      │
+      ▼
+Chat Service
+      │
+      ▼
+LangGraph
+      │
+      ▼
+Response
 =========================================================
 """
 
+# =========================================================
+# Imports
+# =========================================================
+
 from fastapi import APIRouter
-from langchain_core.messages import HumanMessage
 
 from app.models.chat_models import (
     ChatRequest,
     ChatResponse,
 )
+from app.models.response_models import APIResponse
+from app.services.chat_service import chat_with_ai
 
-from app.models.response_model import APIResponse
 
-from app.agents.graph import graph
-
+# =========================================================
+# Router
+# =========================================================
 
 router = APIRouter(
     prefix="/chat",
@@ -40,60 +55,24 @@ router = APIRouter(
     "",
     response_model=APIResponse,
 )
-def chat(request: ChatRequest):
+def chat(
+    request: ChatRequest,
+):
+    """
+    Execute SupportOS AI chat workflow.
+    """
 
-    # -----------------------------------------------------
-    # Create Shared State
-    # -----------------------------------------------------
-
-    state = {
-
-        # Conversation History
-        "messages": [
-            HumanMessage(content=request.message)
-        ],
-
-        # User Information
-        "tenant_id": request.tenant_id,
-        "user_id": request.user_id,
-
-        # User Question
-        "question": "",
-
-        # Digital Twin
-        "user_profile": {},
-
-        # Retrieved Context
-        "context": "",
-        "documents": [],
-
-        # AI Responses
-        "draft_answer": "",
-        "final_answer": "",
-
-        # Workflow
-        "next_agent": "knowledge_agent",
-    }
-
-    print("\n🚀 Starting LangGraph Workflow...")
-
-    # -----------------------------------------------------
-    # Execute Workflow
-    # -----------------------------------------------------
-
-    result = graph.invoke(state)
-
-    print("✅ Workflow Finished")
-
-    # -----------------------------------------------------
-    # Return API Response
-    # -----------------------------------------------------
+    result = chat_with_ai(
+        question=request.question,
+        user_id=request.user_id,
+        tenant_id=request.tenant_id,
+    )
 
     return APIResponse(
         success=True,
-        message="Chat generated successfully.",
+        message="Chat completed successfully.",
         data=ChatResponse(
-            reply=result["final_answer"],
+            reply=result["reply"],
             documents=result["documents"],
         ),
     )

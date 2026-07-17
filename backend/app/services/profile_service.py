@@ -1,72 +1,77 @@
 """
 =========================================================
 File: profile_service.py
-
-Purpose:
-Business logic for User Profile.
-
-Responsibilities:
-1. Create user profile
-2. Fetch user profile
 =========================================================
 """
 
-from app.core.supabase import supabase
-from app.models.user_profile import UserProfileRequest
+from uuid import UUID
+
+from supabase import Client
+
+from app.core.supabase_client import supabase
+from app.models.user_profile_models import UserProfileRequest
 
 
-# =========================================================
-# Create Profile
-# =========================================================
+class ProfileService:
 
-def create_profile(profile: UserProfileRequest):
-    """
-    Create a new user profile.
-    """
+    def __init__(self, db: Client = supabase):
+        self.db = db
 
-    profile_data = profile.model_dump(mode="json")
-
-    response = (
-        supabase
-        .table("user_profiles")
-        .insert(profile_data)
-        .execute()
-    )
-
-    return response.data
-
-
-# =========================================================
-# Get Profile
-# =========================================================
-
-def get_profile(user_id: str):
-    """
-    Fetch profile using user id.
-
-    Returns:
-        dict : User profile
-        {}   : If profile does not exist
-    """
-
-    try:
+    def create_profile(
+        self,
+        profile: UserProfileRequest,
+    ) -> dict:
+        """
+        Create a new user profile.
+        """
 
         response = (
-            supabase
+            self.db
+            .table("user_profiles")
+            .insert(profile.model_dump(mode="json"))
+            .execute()
+        )
+
+        if not response.data:
+            raise Exception("Failed to create profile.")
+
+        return response.data[0]
+
+    def get_profile(
+        self,
+        user_id: UUID,
+        tenant_id: UUID,
+    ) -> dict:
+        """
+        Fetch Digital Twin profile.
+        """
+
+        response = (
+            self.db
             .table("user_profiles")
             .select("*")
-            .eq(
-                "user_id",
-                user_id,
-            )
+            .eq("user_id", str(user_id))
+            .eq("tenant_id", str(tenant_id))
             .single()
             .execute()
         )
 
-        return response.data or {}
+        if not response.data:
+            return {}
 
-    except Exception as e:
+        return response.data
 
-        print(f"❌ Profile Fetch Error: {e}")
 
-        return {}
+profile_service = ProfileService()
+
+
+# =========================================================
+# Backward Compatibility
+# =========================================================
+
+def create_profile(profile: UserProfileRequest):
+    return profile_service.create_profile(profile)
+
+
+def get_profile(user_id: UUID, tenant_id: UUID):
+    return profile_service.get_profile(user_id, tenant_id)

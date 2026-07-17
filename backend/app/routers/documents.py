@@ -1,24 +1,31 @@
 """
-documents.py
+=========================================================
+File: documents.py
 
 Purpose:
-Receive document upload request.
+Document Upload API
 
-Flow
-
-Swagger
-    ↓
-Validate Request
-    ↓
-Service Layer
-    ↓
-Return Response
+Responsibilities:
+1. Receive upload request
+2. Validate request
+3. Call document service
+4. Return API response
+=========================================================
 """
+
+# =========================================================
+# Imports
+# =========================================================
 
 from fastapi import APIRouter
 
-from app.models.document import SupportDocument
+from app.models.document_models import SupportDocument
 from app.services.document_service import create_document_service
+
+
+# =========================================================
+# Router
+# =========================================================
 
 router = APIRouter(
     prefix="/documents",
@@ -26,14 +33,18 @@ router = APIRouter(
 )
 
 
+# =========================================================
+# Upload Document
+# =========================================================
+
 @router.post("/")
-async def create_document(document: SupportDocument):
+async def create_document(
+    document: SupportDocument,
+):
     """
     Upload a support document.
     """
 
-    # Call service layer
     result = await create_document_service(document)
 
-    # Return API response
     return result

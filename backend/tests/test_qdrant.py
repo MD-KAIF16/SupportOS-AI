@@ -1,4 +1,4 @@
-from app.core.qdrant import qdrant
+from app.core.qdrant_client import qdrant
 
 collections = qdrant.get_collections()
 

@@ -1,28 +1,57 @@
-from google import genai
+"""
+=========================================================
+File: gemini_service.py
 
-from app.core.config import GEMINI_API_KEY
+Purpose:
+Generate AI responses using Gemini.
 
-# Gemini Client
-client = genai.Client(api_key=GEMINI_API_KEY)
+Responsibilities:
+1. Call Gemini client
+2. Handle Gemini errors
+3. Return clean AI response
+=========================================================
+"""
+
+# =========================================================
+# Imports
+# =========================================================
+
+from app.core.exceptions import ChatGenerationException
+from app.core.gemini_client import ask_gemini
+from app.core.logger import logger
 
 
-# Generate normal text response
-def ask_gemini(prompt: str) -> str:
+# =========================================================
+# Gemini Service
+# =========================================================
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt,
-    )
+def generate_response(prompt: str) -> str:
+    """
+    Generate AI response using Gemini.
 
-    return response.text
+    Args:
+        prompt: Final prompt sent to Gemini.
 
+    Returns:
+        AI generated response.
+    """
 
-# Generate embedding vector
-def get_embedding(text: str) -> list[float]:
+    logger.info("Generating AI response...")
 
-    response = client.models.embed_content(
-        model="models/gemini-embedding-001",
-        contents=text,
-    )
+    try:
 
-    return response.embeddings[0].values
+        response = ask_gemini(prompt)
+
+        logger.info("AI response generated successfully.")
+
+        return response.strip()
+
+    except Exception as e:
+
+        logger.exception(
+            "Gemini response generation failed."
+        )
+
+        raise ChatGenerationException(
+            f"Failed to generate AI response: {str(e)}"
+        ) from e

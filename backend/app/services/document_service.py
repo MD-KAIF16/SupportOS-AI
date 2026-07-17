@@ -1,5 +1,6 @@
 """
-document_service.py
+=========================================================
+File: document_service.py
 
 Purpose:
 Complete document upload workflow.
@@ -8,8 +9,6 @@ Flow
 
 Receive Document
         ↓
-Generate UUID
-        ↓
 Save in Supabase
         ↓
 Generate Embedding
@@ -17,66 +16,148 @@ Generate Embedding
 Store in Qdrant
         ↓
 Return Response
+=========================================================
 """
 
-from uuid import uuid4
-from datetime import datetime, timezone
+# =========================================================
+# Imports
+# =========================================================
 
-from app.models.document import SupportDocument
+from app.models.document_models import SupportDocument
 
-from app.core.supabase import supabase
+from app.core.logger import logger
+from app.core.supabase_client import supabase
+from app.core.exceptions import (
+    SupabaseException,
+    EmbeddingException,
+    QdrantException,
+)
 
-from app.services.embedding import generate_embedding
+from app.services.embedding_service import generate_embedding
 from app.services.qdrant_service import insert_document
 
 
-async def create_document_service(document: SupportDocument):
+# =========================================================
+# Document Service
+# =========================================================
+
+async def create_document_service(
+    document: SupportDocument,
+):
     """
     Upload document workflow.
 
-    1. Generate UUID
-    2. Save document in Supabase
-    3. Generate embedding
-    4. Store embedding in Qdrant
+    1. Save document in Supabase
+    2. Generate embedding
+    3. Store embedding in Qdrant
     """
 
-    # Step 1 - Generate ID & Timestamp
-    document_id = str(uuid4())
-    created_at = datetime.now(timezone.utc).isoformat()
+    logger.info("Starting document upload workflow...")
 
-    # Step 2 - Save document in Supabase
-    response = (
-        supabase
-        .table("support_documents")
-        .insert({
-            "id": document_id,
-            "tenant_id": document.tenant_id,
-            "title": document.title,
-            "content": document.content,
-            "created_at": created_at,
-        })
-        .execute()
+    try:
+
+        # -------------------------------------------------
+        # Save in Supabase
+        # -------------------------------------------------
+
+        response = (
+            supabase
+            .table("support_documents")
+            .insert(
+                {
+                    "tenant_id": str(document.tenant_id),
+                    "title": document.title,
+                    "content": document.content,
+                }
+            )
+            .execute()
+        )
+
+        if not response.data:
+            raise SupabaseException(
+                "Document upload failed."
+            )
+
+        stored_document = response.data[0]
+
+        document_id = stored_document["id"]
+
+        logger.info(
+            "Document stored in Supabase."
+        )
+
+    except Exception as e:
+
+        logger.exception(
+            "Supabase document upload failed."
+        )
+
+        raise SupabaseException(
+            str(e)
+        ) from e
+
+    try:
+
+        # -------------------------------------------------
+        # Generate Embedding
+        # -------------------------------------------------
+
+        embedding = generate_embedding(
+            document.content
+        )
+
+        logger.info(
+            "Embedding generated successfully."
+        )
+
+    except Exception as e:
+
+        logger.exception(
+            "Embedding generation failed."
+        )
+
+        raise EmbeddingException(
+            str(e)
+        ) from e
+
+    try:
+
+        # -------------------------------------------------
+        # Store in Qdrant
+        # -------------------------------------------------
+
+        insert_document(
+            document_id=document_id,
+            tenant_id=str(document.tenant_id),
+            title=document.title,
+            content=document.content,
+            embedding=embedding,
+        )
+
+        logger.info(
+            "Document stored in Qdrant."
+        )
+
+    except Exception as e:
+
+        logger.exception(
+            "Qdrant insert failed."
+        )
+
+        raise QdrantException(
+            str(e)
+        ) from e
+
+    # -----------------------------------------------------
+    # Return Response
+    # -----------------------------------------------------
+
+    logger.info(
+        "Document upload workflow completed."
     )
 
-    # Step 3 - Generate embedding
-    embedding = generate_embedding(
-        document.content
-    )
-
-    print(f"Embedding Size: {len(embedding)}")
-
-    # Step 4 - Store vector in Qdrant
-    insert_document(
-        document_id=document_id,
-        tenant_id=document.tenant_id,
-        title=document.title,
-        content=document.content,
-        embedding=embedding,
-    )
-
-    # Step 5 - Return response
     return {
         "success": True,
-        "message": "Document stored successfully",
-        "data": response.data,
+        "message": "Document stored successfully.",
+        "data": stored_document,
     }

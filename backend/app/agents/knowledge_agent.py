@@ -7,12 +7,12 @@ Knowledge Agent
 
 Responsibilities:
 1. Receive user question
-2. Load User Digital Twin
-3. Retrieve relevant documents from Qdrant
-4. Build personalized prompt
-5. Send prompt to Gemini
-6. Store draft answer
-7. Save AI response into memory
+2. Load Digital Twin
+3. Load Conversation History
+4. Retrieve Knowledge Base Context
+5. Build Prompt
+6. Generate AI Response
+7. Save Conversation
 =========================================================
 """
 
@@ -20,13 +20,22 @@ Responsibilities:
 # Imports
 # =========================================================
 
-from langchain_core.messages import AIMessage
 from langchain.tools import tool
+from langchain_core.messages import AIMessage
 
-from app.services.profile_service import get_profile
-from app.services.embedding import generate_embedding
+from app.agents.state import SupportState
+
+from app.core.logger import logger
+
+from app.services.profile_service import profile_service
+from app.services.conversation_service import conversation_service
+
+from app.services.embedding_service import generate_embedding
 from app.services.qdrant_service import search_documents
-from app.services.gemini_service import ask_gemini
+
+from app.services.prompt_builder import build_prompt
+from app.services.gemini_service import generate_response
+
 
 
 # =========================================================
@@ -34,12 +43,15 @@ from app.services.gemini_service import ask_gemini
 # =========================================================
 
 @tool
-def get_context(query: str, tenant_id: str):
+def get_context(
+    query: str,
+    tenant_id: str,
+):
     """
     Search Qdrant Knowledge Base.
     """
 
-    print("🔍 Searching Knowledge Base...")
+    logger.info("Searching Knowledge Base...")
 
     embedding = generate_embedding(query)
 
@@ -56,7 +68,7 @@ def get_context(query: str, tenant_id: str):
 # =========================================================
 
 tools = [
-    get_context
+    get_context,
 ]
 
 
@@ -66,7 +78,7 @@ tools = [
 
 def knowledge_agent(state):
 
-    print("\n📚 Knowledge Agent Started")
+    logger.info("Knowledge Agent Started")
 
     # -----------------------------------------------------
     # Read Shared State
@@ -85,18 +97,53 @@ def knowledge_agent(state):
 
     try:
 
-        profile = get_profile(user_id)
+        profile = profile_service.get_profile(
+            user_id=user_id,
+            tenant_id=tenant_id,
+        )
 
-    except Exception as e:
+        logger.info("User profile loaded.")
 
-        print(f"❌ Profile Load Error: {e}")
+    except Exception:
+
+        logger.exception(
+            "Failed to load user profile."
+        )
 
         profile = {}
 
     state["user_profile"] = profile
 
     # -----------------------------------------------------
-    # Retrieve Context
+    # Load Conversation History
+    # -----------------------------------------------------
+
+    try:
+
+        history = (
+            conversation_service.get_recent_conversations(
+                user_id=user_id,
+                tenant_id=tenant_id,
+                limit=10,
+            )
+        )
+
+        logger.info(
+            f"Loaded {len(history)} previous conversations."
+        )
+
+    except Exception:
+
+        logger.exception(
+            "Failed to load conversation history."
+        )
+
+        history = []
+
+    state["conversation_history"] = history
+
+    # -----------------------------------------------------
+    # Retrieve Knowledge Base Context
     # -----------------------------------------------------
 
     try:
@@ -104,15 +151,23 @@ def knowledge_agent(state):
         documents = get_context.invoke(
             {
                 "query": question,
-                "tenant_id": tenant_id,
+                "tenant_id": str(tenant_id),
             }
         )
 
-    except Exception as e:
+        logger.info(
+            f"Retrieved {len(documents)} document(s) from Qdrant."
+        )
 
-        print(f"❌ Context Retrieval Failed: {e}")
+    except Exception:
+
+        logger.exception(
+            "Knowledge retrieval failed."
+        )
 
         documents = []
+
+    state["documents"] = documents
 
     # -----------------------------------------------------
     # Build Context
@@ -121,118 +176,117 @@ def knowledge_agent(state):
     if documents:
 
         context = "\n\n".join(
-            doc["content"]
-            for doc in documents
+            document["content"]
+            for document in documents
         )
 
     else:
 
         context = ""
 
-    state["documents"] = documents
     state["context"] = context
-
-    # -----------------------------------------------------
-    # User Profile Context
-    # -----------------------------------------------------
-
-    profile_context = ""
-
-    if profile:
-
-        profile_context = f"""
-User Profile
-
-Name: {profile.get("full_name", "Unknown")}
-Company: {profile.get("company", "Unknown")}
-Preferred Language: {profile.get("preferred_language", "English")}
-Preferred Tone: {profile.get("preferred_tone", "Friendly")}
-"""
 
     # -----------------------------------------------------
     # Build Prompt
     # -----------------------------------------------------
 
-    if context:
+    try:
 
-        prompt = f"""
-You are SupportOS AI.
+        prompt = build_prompt(
+            question=question,
+            profile=profile,
+            conversation_history=history,
+            documents=documents,
+        )
 
-{profile_context}
+        state["prompt"] = prompt
 
-Previous Conversation:
-{state["messages"]}
+        logger.info(
+            "Prompt built successfully."
+        )
 
-Use ONLY the provided context to answer the user's question.
+    except Exception:
 
-If the answer is not available in the context, reply exactly:
+        logger.exception(
+            "Prompt builder failed."
+        )
 
-"I couldn't find that information in the knowledge base."
+        prompt = question
 
-Context:
-{context}
-
-Current Question:
-{question}
-
-Answer according to the user's preferred language and preferred tone.
-"""
-
-    else:
-
-        prompt = f"""
-You are SupportOS AI.
-
-{profile_context}
-
-Previous Conversation:
-{state["messages"]}
-
-No relevant knowledge was retrieved from the knowledge base.
-
-If you know the answer confidently, answer briefly.
-
-Otherwise reply:
-
-"I couldn't find that information in the knowledge base."
-
-Current Question:
-{question}
-
-Answer according to the user's preferred language and preferred tone.
-"""
+        state["prompt"] = prompt
 
     # -----------------------------------------------------
-    # Ask Gemini
+    # Generate AI Response
     # -----------------------------------------------------
 
     try:
 
-        answer = ask_gemini(prompt)
+        answer = generate_response(
+            prompt=prompt,
+        )
 
-    except Exception as e:
+        logger.info(
+            "Gemini response generated successfully."
+        )
 
-        print(f"❌ Gemini Error: {e}")
+    except Exception:
+
+        logger.exception(
+            "Gemini response generation failed."
+        )
 
         answer = (
             "I'm sorry, I'm unable to answer right now. "
-            "Please try again after some time."
+            "Please try again later."
         )
-
-    # -----------------------------------------------------
-    # Save Draft Answer
-    # -----------------------------------------------------
 
     state["draft_answer"] = answer
 
     # -----------------------------------------------------
-    # Save AI Response into Memory
+    # Save Conversation
+    # -----------------------------------------------------
+
+    try:
+
+        conversation_service.save_conversation(
+            user_id=user_id,
+            tenant_id=tenant_id,
+            question=question,
+            answer=answer,
+        )
+
+        logger.info(
+            "Conversation saved successfully."
+        )
+
+    except Exception:
+
+        logger.exception(
+            "Failed to save conversation."
+        )
+
+    # -----------------------------------------------------
+    # Update LangGraph Messages
     # -----------------------------------------------------
 
     state["messages"].append(
-        AIMessage(content=answer)
+        AIMessage(
+            content=answer,
+        )
     )
 
-    print("✅ Knowledge Agent Finished")
+    # -----------------------------------------------------
+    # Update Workflow State
+    # -----------------------------------------------------
+
+    state["draft_answer"] = answer
+
+    state["final_answer"] = answer
+
+    state["next_agent"] = "judge_agent"
+
+    logger.info(
+        "Knowledge Agent Finished Successfully."
+    )
 
     return state

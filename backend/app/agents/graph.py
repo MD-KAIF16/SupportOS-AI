@@ -39,8 +39,7 @@ from langgraph.graph import (
 )
 
 from app.agents.state import SupportState
-
-from app.agents.orchestrator import orchestrator
+from app.agents.orchestrator_agent import orchestrator
 from app.agents.knowledge_agent import knowledge_agent
 from app.agents.judge_agent import judge_agent
 
@@ -53,7 +52,7 @@ builder = StateGraph(SupportState)
 
 
 # =========================================================
-# Register Agents
+# Register Nodes
 # =========================================================
 
 builder.add_node(
@@ -73,6 +72,24 @@ builder.add_node(
 
 
 # =========================================================
+# Routing Function
+# =========================================================
+
+def route_from_orchestrator(
+    state: SupportState,
+) -> str:
+    """
+    Returns the next node selected by the
+    Orchestrator Agent.
+    """
+
+    return state.get(
+        "next_agent",
+        "knowledge_agent",
+    )
+
+
+# =========================================================
 # Workflow
 # =========================================================
 
@@ -81,9 +98,13 @@ builder.add_edge(
     "orchestrator",
 )
 
-builder.add_edge(
+builder.add_conditional_edges(
     "orchestrator",
-    "knowledge_agent",
+    route_from_orchestrator,
+    {
+        "knowledge_agent": "knowledge_agent",
+        "judge_agent": "judge_agent",
+    },
 )
 
 builder.add_edge(
@@ -101,4 +122,6 @@ builder.add_edge(
 # Compile Graph
 # =========================================================
 
-graph = builder.compile()
+graph = builder.compile(
+    name="SupportOS_AI_Graph",
+)
