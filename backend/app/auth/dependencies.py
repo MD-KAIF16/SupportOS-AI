@@ -1,25 +1,32 @@
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from jose import jwt, JWTError
+"""
+=========================================================
+File: dependencies.py
+
+Purpose:
+Authentication dependency for protected routes.
+=========================================================
+"""
+
+from fastapi import Depends
+from fastapi.security import (
+    HTTPAuthorizationCredentials,
+    HTTPBearer,
+)
+
+from app.auth.security import verify_access_token
 
 security = HTTPBearer()
+
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
 ):
+    """
+    Extract and verify JWT token.
+    """
+
     token = credentials.credentials
 
-    try:
-        payload = jwt.decode(
-            token,
-            "YOUR_SECRET_KEY",  # Abhi placeholder
-            algorithms=["HS256"]
-        )
+    payload = verify_access_token(token)
 
-        return payload
-
-    except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid Token"
-        )
+    return payload

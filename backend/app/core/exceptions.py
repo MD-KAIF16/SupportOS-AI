@@ -65,3 +65,12 @@ class ChatGenerationException(SupportOSException):
 class DocumentNotFoundException(SupportOSException):
     """Raised when no relevant documents are found."""
     pass
+
+
+# =========================================================
+# Authentication
+# =========================================================
+
+class AuthenticationException(SupportOSException):
+    """Raised when authentication fails."""
+    pass

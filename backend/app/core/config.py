@@ -21,3 +21,11 @@ MIN_SEARCH_SCORE = 0.20
 
 # Maximum documents to retrieve from Qdrant
 TOP_K_DOCUMENTS = 3
+
+# ---------------------------------------------------------
+# JWT Configuration
+# ---------------------------------------------------------
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
