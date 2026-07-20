@@ -27,15 +27,15 @@ Response
 # Imports
 # =========================================================
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
+from app.auth.dependencies import require_role
 from app.models.chat_models import (
     ChatRequest,
     ChatResponse,
 )
 from app.models.response_models import APIResponse
 from app.services.chat_service import chat_with_ai
-
 
 # =========================================================
 # Router
@@ -45,7 +45,6 @@ router = APIRouter(
     prefix="/chat",
     tags=["Chat"],
 )
-
 
 # =========================================================
 # Chat Endpoint
@@ -76,3 +75,21 @@ def chat(
             documents=result["documents"],
         ),
     )
+
+
+# =========================================================
+# Admin RBAC Test
+# =========================================================
+
+@router.get("/admin-test")
+async def admin_test(
+    current_user=Depends(require_role(["admin"]))
+):
+    """
+    Test endpoint for Admin RBAC.
+    """
+
+    return {
+        "message": "Welcome Admin",
+        "user": current_user,
+    }

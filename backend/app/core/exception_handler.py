@@ -113,6 +113,27 @@ def register_exception_handlers(app: FastAPI):
         )
 
     # =====================================================
+    # Authentication Exception
+    # =====================================================
+
+    @app.exception_handler(AuthenticationException)
+    async def authentication_handler(
+        request: Request,
+        exc: AuthenticationException,
+    ):
+
+        logger.warning(str(exc))
+
+        return JSONResponse(
+            status_code=401,
+            content={
+                "success": False,
+                "message": str(exc),
+                "data": None,
+            },
+        )
+
+    # =====================================================
     # Unknown Exception
     # =====================================================
 
@@ -132,25 +153,3 @@ def register_exception_handlers(app: FastAPI):
                 "data": None,
             },
         )
-    
-
-    # =====================================================
-# Authentication Exception
-# =====================================================
-
-@app.exception_handler(AuthenticationException)
-async def authentication_handler(
-    request: Request,
-    exc: AuthenticationException,
-):
-
-    logger.warning(str(exc))
-
-    return JSONResponse(
-        status_code=401,
-        content={
-            "success": False,
-            "message": str(exc),
-            "data": None,
-        },
-    )

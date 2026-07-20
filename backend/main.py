@@ -10,6 +10,7 @@ from app.routers.chat import router as chat_router
 from app.routers.documents import router as documents_router
 from app.core.exception_handler import register_exception_handlers
 from app.routers.profile import router as profile_router
+from app.routers.auth import router as auth_router
 
 app = FastAPI(
     title="SupportOS AI Backend",
@@ -38,6 +39,7 @@ app.add_middleware(
 app.include_router(documents_router)
 app.include_router(chat_router)
 app.include_router(profile_router)
+app.include_router(auth_router)
 
 # ======================================================
 # Home
