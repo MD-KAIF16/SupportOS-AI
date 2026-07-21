@@ -6,10 +6,10 @@ Purpose:
 Judge Agent
 
 Responsibilities:
-1. Read draft answer
-2. Review answer
+1. Review final answer
+2. Validate response
 3. Improve answer (Future)
-4. Save final answer
+4. Return approved answer
 =========================================================
 """
 
@@ -29,7 +29,7 @@ def judge_agent(
     state: SupportState,
 ) -> SupportState:
     """
-    Review AI response before returning it.
+    Review final AI response before returning it.
     """
 
     logger.info("Judge Agent Started")
@@ -37,10 +37,13 @@ def judge_agent(
     try:
 
         # -------------------------------------------------
-        # Read Draft Answer
+        # Read Final Answer
         # -------------------------------------------------
 
-        draft_answer = state["draft_answer"]
+        final_answer = state.get(
+            "final_answer",
+            ""
+        )
 
         # -------------------------------------------------
         # Future Improvements
@@ -51,8 +54,6 @@ def judge_agent(
         # ✓ Response Scoring
         # ✓ Confidence Score
         # -------------------------------------------------
-
-        final_answer = draft_answer
 
         state["final_answer"] = final_answer
 

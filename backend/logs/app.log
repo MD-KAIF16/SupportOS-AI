@@ -1100,3 +1100,135 @@ postgrest.exceptions.APIError: {'message': 'Cannot coerce the result to a single
 2026-07-20 21:03:23,766 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 200 OK"
 2026-07-20 21:03:24,848 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&email=eq.kaif%40gmail.com "HTTP/2 200 OK"
 2026-07-20 21:05:47,516 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-21 19:12:14,468 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-21 19:12:22,710 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-21 19:13:51,817 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-21 19:13:51,832 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-21 19:13:51,832 | INFO | SupportOS | Question: What is the refund policy?
+2026-07-21 19:13:51,832 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-21 19:13:51,833 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-21 19:13:51,835 | INFO | SupportOS | Knowledge Agent Started
+2026-07-21 19:13:53,933 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.22222222-2222-2222-2222-222222222222&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 406 Not Acceptable"
+2026-07-21 19:13:53,946 | ERROR | SupportOS | Failed to load user profile.
+Traceback (most recent call last):
+  File "C:\Users\user\SupportOS-AI\backend\app\agents\knowledge_agent.py", line 99, in knowledge_agent
+    profile = profile_service.get_profile(
+        user_id=user_id,
+        tenant_id=tenant_id,
+    )
+  File "C:\Users\user\SupportOS-AI\backend\app\services\profile_service.py", line 56, in get_profile
+    .execute()
+     ~~~~~~~^^
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 129, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'Cannot coerce the result to a single JSON object', 'code': 'PGRST116', 'hint': None, 'details': 'The result contains 0 rows'}
+2026-07-21 19:13:54,115 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.22222222-2222-2222-2222-222222222222&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=10 "HTTP/2 200 OK"
+2026-07-21 19:13:54,122 | INFO | SupportOS | Loaded 0 previous conversations.
+2026-07-21 19:13:54,124 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-21 19:13:54,124 | INFO | SupportOS | Generating embedding...
+2026-07-21 19:13:54,769 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-21 19:13:54,794 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-21 19:13:54,795 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-21 19:13:56,348 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-21 19:13:56,356 | INFO | SupportOS | Raw points returned: 1
+2026-07-21 19:13:56,357 | INFO | SupportOS | Score=0.6971 | Title=Refund Policy
+2026-07-21 19:13:56,358 | INFO | SupportOS | Accepted document (0.6971)
+2026-07-21 19:13:56,358 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-21 19:13:56,359 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-21 19:13:56,359 | INFO | SupportOS | Prompt built successfully.
+2026-07-21 19:13:56,360 | INFO | SupportOS | Generating AI response...
+2026-07-21 19:13:56,360 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-21 19:13:57,780 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-21 19:13:57,791 | INFO | SupportOS | AI response generated successfully.
+2026-07-21 19:13:57,792 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-21 19:13:57,963 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 409 Conflict"
+2026-07-21 19:13:57,964 | ERROR | SupportOS | Failed to save conversation.
+Traceback (most recent call last):
+  File "C:\Users\user\SupportOS-AI\backend\app\agents\knowledge_agent.py", line 250, in knowledge_agent
+    conversation_service.save_conversation(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        user_id=user_id,
+        ^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        answer=answer,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\user\SupportOS-AI\backend\app\services\conversation_service.py", line 78, in save_conversation
+    .execute()
+     ~~~~~~~^^
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 96, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'insert or update on table "conversations" violates foreign key constraint "conversations_user_id_fkey"', 'code': '23503', 'hint': None, 'details': 'Key (user_id)=(22222222-2222-2222-2222-222222222222) is not present in table "users".'}
+2026-07-21 19:13:57,965 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-21 19:13:57,966 | INFO | SupportOS | FollowUp Agent Started
+2026-07-21 19:13:57,966 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-21 19:13:57,968 | INFO | SupportOS | Judge Agent Started
+2026-07-21 19:13:57,968 | INFO | SupportOS | Final answer approved.
+2026-07-21 19:13:57,968 | INFO | SupportOS | Judge Agent Finished
+2026-07-21 19:13:57,969 | INFO | SupportOS | Workflow completed.
+2026-07-21 19:14:51,012 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-21 19:14:51,013 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-21 19:14:51,013 | INFO | SupportOS | Question: Hello Gemini How are you whats the algorithm behind your functionality
+2026-07-21 19:14:51,013 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-21 19:14:51,014 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-21 19:14:51,015 | INFO | SupportOS | Knowledge Agent Started
+2026-07-21 19:14:51,919 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.22222222-2222-2222-2222-222222222222&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 406 Not Acceptable"
+2026-07-21 19:14:51,922 | ERROR | SupportOS | Failed to load user profile.
+Traceback (most recent call last):
+  File "C:\Users\user\SupportOS-AI\backend\app\agents\knowledge_agent.py", line 99, in knowledge_agent
+    profile = profile_service.get_profile(
+        user_id=user_id,
+        tenant_id=tenant_id,
+    )
+  File "C:\Users\user\SupportOS-AI\backend\app\services\profile_service.py", line 56, in get_profile
+    .execute()
+     ~~~~~~~^^
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 129, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'Cannot coerce the result to a single JSON object', 'code': 'PGRST116', 'hint': None, 'details': 'The result contains 0 rows'}
+2026-07-21 19:14:52,061 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.22222222-2222-2222-2222-222222222222&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=10 "HTTP/2 200 OK"
+2026-07-21 19:14:52,062 | INFO | SupportOS | Loaded 0 previous conversations.
+2026-07-21 19:14:52,063 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-21 19:14:52,063 | INFO | SupportOS | Generating embedding...
+2026-07-21 19:14:52,641 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-21 19:14:52,663 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-21 19:14:52,663 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-21 19:14:54,218 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-21 19:14:54,220 | INFO | SupportOS | Raw points returned: 1
+2026-07-21 19:14:54,221 | INFO | SupportOS | Score=0.4886 | Title=Refund Policy
+2026-07-21 19:14:54,221 | INFO | SupportOS | Accepted document (0.4886)
+2026-07-21 19:14:54,222 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-21 19:14:54,223 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-21 19:14:54,223 | INFO | SupportOS | Prompt built successfully.
+2026-07-21 19:14:54,223 | INFO | SupportOS | Generating AI response...
+2026-07-21 19:14:54,224 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-21 19:14:56,169 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-21 19:14:56,175 | INFO | SupportOS | AI response generated successfully.
+2026-07-21 19:14:56,176 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-21 19:14:56,330 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 409 Conflict"
+2026-07-21 19:14:56,332 | ERROR | SupportOS | Failed to save conversation.
+Traceback (most recent call last):
+  File "C:\Users\user\SupportOS-AI\backend\app\agents\knowledge_agent.py", line 250, in knowledge_agent
+    conversation_service.save_conversation(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        user_id=user_id,
+        ^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        answer=answer,
+        ^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\user\SupportOS-AI\backend\app\services\conversation_service.py", line 78, in save_conversation
+    .execute()
+     ~~~~~~~^^
+  File "C:\Users\user\SupportOS-AI\backend\.venv\Lib\site-packages\postgrest\_sync\request_builder.py", line 96, in execute
+    raise APIError(dict(json_obj))
+postgrest.exceptions.APIError: {'message': 'insert or update on table "conversations" violates foreign key constraint "conversations_user_id_fkey"', 'code': '23503', 'hint': None, 'details': 'Key (user_id)=(22222222-2222-2222-2222-222222222222) is not present in table "users".'}
+2026-07-21 19:14:56,335 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-21 19:14:56,337 | INFO | SupportOS | FollowUp Agent Started
+2026-07-21 19:14:56,338 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-21 19:14:56,340 | INFO | SupportOS | Judge Agent Started
+2026-07-21 19:14:56,340 | INFO | SupportOS | Final answer approved.
+2026-07-21 19:14:56,340 | INFO | SupportOS | Judge Agent Finished
+2026-07-21 19:14:56,342 | INFO | SupportOS | Workflow completed.
