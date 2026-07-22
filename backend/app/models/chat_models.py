@@ -23,16 +23,6 @@ class ChatRequest(BaseModel):
     Validate incoming chat request.
     """
 
-    tenant_id: str = Field(
-        ...,
-        description="Tenant UUID",
-    )
-
-    user_id: str = Field(
-        ...,
-        description="User UUID",
-    )
-
     question: str = Field(
         ...,
         min_length=3,
@@ -58,16 +48,7 @@ class ChatRequest(BaseModel):
 # =========================================================
 
 class ChatResponse(BaseModel):
-    """
-    Standard response returned by chat API.
-    """
 
-    reply: str = Field(
-        ...,
-        description="AI generated response",
-    )
+    reply: str
 
-    documents: list[dict] = Field(
-        default_factory=list,
-        description="Retrieved documents",
-    )
+    documents: list[dict] = Field(default_factory=list)

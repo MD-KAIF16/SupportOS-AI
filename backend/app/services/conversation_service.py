@@ -17,12 +17,13 @@ from uuid import UUID
 
 from supabase import Client
 
+from app.core.logger import logger
 from app.core.supabase_client import supabase
 
 
 class ConversationService:
     """
-    Service for conversation history.
+    Service responsible for managing conversation history.
     """
 
     def __init__(self, db: Client = supabase):
@@ -39,18 +40,32 @@ class ConversationService:
         limit: int = 5,
     ) -> list[dict]:
 
-        response = (
-            self.db
-            .table("conversations")
-            .select("*")
-            .eq("user_id", str(user_id))
-            .eq("tenant_id", str(tenant_id))
-            .order("created_at", desc=True)
-            .limit(limit)
-            .execute()
-        )
+        try:
 
-        return response.data or []
+            response = (
+                self.db
+                .table("conversations")
+                .select("*")
+                .eq("user_id", str(user_id))
+                .eq("tenant_id", str(tenant_id))
+                .order("created_at", desc=True)
+                .limit(limit)
+                .execute()
+            )
+
+            logger.info(
+                f"Loaded {len(response.data)} conversation(s)."
+            )
+
+            return response.data or []
+
+        except Exception as e:
+
+            logger.exception(
+                f"Failed to fetch conversations: {e}"
+            )
+
+            return []
 
     # =====================================================
     # Save Conversation
@@ -64,19 +79,29 @@ class ConversationService:
         answer: str,
     ) -> None:
 
-        (
-            self.db
-            .table("conversations")
-            .insert(
-                {
-                    "user_id": str(user_id),
-                    "tenant_id": str(tenant_id),
-                    "question": question,
-                    "answer": answer,
-                }
+        try:
+
+            (
+                self.db
+                .table("conversations")
+                .insert(
+                    {
+                        "user_id": str(user_id),
+                        "tenant_id": str(tenant_id),
+                        "question": question,
+                        "answer": answer,
+                    }
+                )
+                .execute()
             )
-            .execute()
-        )
+
+            logger.info("Conversation saved successfully.")
+
+        except Exception as e:
+
+            logger.exception(
+                f"Failed to save conversation: {e}"
+            )
 
 
 conversation_service = ConversationService()

@@ -1232,3 +1232,65 @@ postgrest.exceptions.APIError: {'message': 'insert or update on table "conversat
 2026-07-21 19:14:56,340 | INFO | SupportOS | Final answer approved.
 2026-07-21 19:14:56,340 | INFO | SupportOS | Judge Agent Finished
 2026-07-21 19:14:56,342 | INFO | SupportOS | Workflow completed.
+2026-07-22 19:20:21,429 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-22 19:20:31,194 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-22 19:22:19,388 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 400 Bad Request"
+2026-07-22 19:22:19,396 | WARNING | SupportOS | Invalid email or password.
+2026-07-22 19:23:35,935 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 400 Bad Request"
+2026-07-22 19:23:35,936 | WARNING | SupportOS | Invalid email or password.
+2026-07-22 19:23:47,944 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 400 Bad Request"
+2026-07-22 19:23:47,946 | WARNING | SupportOS | Invalid email or password.
+2026-07-22 19:26:28,140 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 400 Bad Request"
+2026-07-22 19:26:28,142 | WARNING | SupportOS | Invalid email or password.
+2026-07-22 19:29:37,576 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 200 OK"
+2026-07-22 19:29:38,775 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&email=eq.kaif%40gmail.com "HTTP/2 200 OK"
+2026-07-22 19:32:00,783 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-22 19:34:30,560 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-22 19:34:45,029 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-22 19:36:05,677 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-22 19:37:10,080 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-22 19:40:11,720 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 200 OK"
+2026-07-22 19:40:12,092 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&email=eq.kaif%40gmail.com "HTTP/2 200 OK"
+2026-07-22 19:40:51,845 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-22 19:42:07,665 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-22 19:42:07,666 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-22 19:42:07,681 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-22 19:42:07,682 | INFO | SupportOS | Question: Hello SupportOS AI
+2026-07-22 19:42:07,682 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-22 19:42:07,682 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-22 19:42:07,684 | INFO | SupportOS | Knowledge Agent Started
+2026-07-22 19:42:07,815 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-22 19:42:07,816 | INFO | SupportOS | User profile loaded.
+2026-07-22 19:42:07,976 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=10 "HTTP/2 200 OK"
+2026-07-22 19:42:07,988 | INFO | SupportOS | Loaded 1 conversation(s).
+2026-07-22 19:42:07,988 | INFO | SupportOS | Loaded 1 previous conversations.
+2026-07-22 19:42:07,989 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-22 19:42:07,990 | INFO | SupportOS | Generating embedding...
+2026-07-22 19:42:08,959 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-22 19:42:08,989 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-22 19:42:08,989 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-22 19:42:10,636 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-22 19:42:10,646 | INFO | SupportOS | Raw points returned: 1
+2026-07-22 19:42:10,649 | INFO | SupportOS | Score=0.4906 | Title=Refund Policy
+2026-07-22 19:42:10,649 | INFO | SupportOS | Accepted document (0.4906)
+2026-07-22 19:42:10,649 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-22 19:42:10,650 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-22 19:42:10,651 | INFO | SupportOS | Prompt built successfully.
+2026-07-22 19:42:10,651 | INFO | SupportOS | Generating AI response...
+2026-07-22 19:42:10,651 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-22 19:42:12,390 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-22 19:42:12,397 | INFO | SupportOS | AI response generated successfully.
+2026-07-22 19:42:12,398 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-22 19:42:12,557 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-22 19:42:12,558 | INFO | SupportOS | Conversation saved successfully.
+2026-07-22 19:42:12,558 | INFO | SupportOS | Conversation saved successfully.
+2026-07-22 19:42:12,558 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-22 19:42:12,560 | INFO | SupportOS | FollowUp Agent Started
+2026-07-22 19:42:12,560 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-22 19:42:12,562 | INFO | SupportOS | Judge Agent Started
+2026-07-22 19:42:12,562 | INFO | SupportOS | Final answer approved.
+2026-07-22 19:42:12,562 | INFO | SupportOS | Judge Agent Finished
+2026-07-22 19:42:12,563 | INFO | SupportOS | Workflow completed.
+2026-07-22 19:42:12,711 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-22 19:42:12,712 | INFO | SupportOS | Conversation saved successfully.
+2026-07-22 19:42:12,712 | INFO | SupportOS | Conversation saved successfully.
