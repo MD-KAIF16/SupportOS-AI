@@ -24,7 +24,7 @@ def build_prompt(
     documents: list[dict],
 ) -> str:
     """
-    Build final prompt for Gemini.
+    Build the final prompt for Gemini.
     """
 
     # =====================================================
@@ -42,7 +42,11 @@ Email: {profile.get("email", "Unknown")}
 
     else:
 
-        profile_text = "User Profile\nNo profile available."
+        profile_text = """
+User Profile
+
+No profile available.
+"""
 
     # =====================================================
     # Conversation History
@@ -56,8 +60,8 @@ Email: {profile.get("email", "Unknown")}
 
             history.append(
                 f"""
-User: {chat.get("question","")}
-Assistant: {chat.get("answer","")}
+User: {chat.get("question", "")}
+Assistant: {chat.get("answer", "")}
 """
             )
 
@@ -77,7 +81,9 @@ Assistant: {chat.get("answer","")}
 
         for doc in documents:
 
-            knowledge.append(doc["content"])
+            knowledge.append(
+                doc.get("content", "")
+            )
 
         knowledge_text = "\n\n".join(knowledge)
 
@@ -92,40 +98,95 @@ Assistant: {chat.get("answer","")}
     prompt = f"""
 You are SupportOS AI.
 
-You are an intelligent customer support assistant.
+You are an intelligent AI customer support assistant.
 
-Always use the retrieved knowledge whenever available.
+==================================================
+INSTRUCTIONS
+==================================================
 
-If the answer is not present inside the knowledge,
-say:
+You have THREE sources of information:
+
+1. USER PROFILE
+   - Use for user identity and profile information.
+
+2. PREVIOUS CONVERSATION
+   - Use this when the user asks about something they
+     previously told you.
+   - Examples:
+       - What is my name?
+       - Where do I live?
+       - What is my favourite color?
+       - What did I tell you earlier?
+   - Use the previous conversation as memory for these questions.
+
+3. KNOWLEDGE BASE
+   - Use ONLY for company, product, support,
+     documentation and business related questions.
+   - Examples:
+       - Refund Policy
+       - Password Reset
+       - Subscription
+       - Tickets
+       - Features
+
+IMPORTANT:
+
+- Do NOT ignore Previous Conversation for memory questions.
+
+- Do NOT use the Knowledge Base for personal memory questions.
+
+- Only respond with:
 
 "I couldn't find that information in the knowledge base."
 
---------------------------------------------------
+when the user is asking about company/product/support
+information and the answer does not exist in the Knowledge Base.
+
+- Never invent information.
+
+- If the answer exists in Previous Conversation,
+use it confidently.
+
+==================================================
+USER PROFILE
+==================================================
 
 {profile_text}
 
---------------------------------------------------
-
-Previous Conversation
+==================================================
+PREVIOUS CONVERSATION
+==================================================
 
 {history_text}
 
---------------------------------------------------
-
-Knowledge Base
+==================================================
+KNOWLEDGE BASE
+==================================================
 
 {knowledge_text}
 
---------------------------------------------------
-
-Current User Question
+==================================================
+CURRENT USER QUESTION
+==================================================
 
 {question}
 
---------------------------------------------------
+==================================================
+FINAL RESPONSE
+==================================================
 
-Provide a clear, professional and concise answer.
+First determine whether the user's question is:
+
+(A) A personal memory question
+→ Use Previous Conversation.
+
+(B) A support/company question
+→ Use Knowledge Base.
+
+(C) A profile question
+→ Use User Profile.
+
+Then answer professionally, clearly and naturally.
 """
 
     return prompt

@@ -12,7 +12,6 @@ Responsibilities:
 4. Retrieve Knowledge Base Context
 5. Build Prompt
 6. Generate AI Response
-7. Save Conversation
 =========================================================
 """
 
@@ -26,7 +25,6 @@ from app.agents.state import SupportState
 from app.core.logger import logger
 
 from app.services.profile_service import profile_service
-from app.services.conversation_service import conversation_service
 
 from app.services.embedding_service import generate_embedding
 from app.services.qdrant_service import search_documents
@@ -116,32 +114,14 @@ def knowledge_agent(
     state["user_profile"] = profile
 
     # -----------------------------------------------------
-    # Load Conversation History
+    # Conversation History
     # -----------------------------------------------------
 
-    try:
+    history = state.get("conversation_history", [])
 
-        history = (
-            conversation_service.get_recent_conversations(
-                user_id=user_id,
-                tenant_id=tenant_id,
-                limit=10,
-            )
-        )
-
-        logger.info(
-            f"Loaded {len(history)} previous conversations."
-        )
-
-    except Exception:
-
-        logger.exception(
-            "Failed to load conversation history."
-        )
-
-        history = []
-
-    state["conversation_history"] = history
+    logger.info(
+    f"Using {len(history)} conversation(s) from workflow state."
+    )
 
     # -----------------------------------------------------
     # Retrieve Knowledge Base Context
@@ -186,6 +166,11 @@ def knowledge_agent(
         context = ""
 
     state["context"] = context
+
+    logger.info("========== PROMPT DEBUG ==========")
+    logger.info(f"History Count: {len(history)}")
+    logger.info(history)
+    logger.info("==================================")
 
     # -----------------------------------------------------
     # Build Prompt
@@ -241,28 +226,6 @@ def knowledge_agent(
             "I'm sorry, something went wrong while generating the response."
         )
 
-    # -----------------------------------------------------
-    # Save Conversation
-    # -----------------------------------------------------
-
-    try:
-
-        conversation_service.save_conversation(
-            user_id=user_id,
-            tenant_id=tenant_id,
-            question=question,
-            answer=answer,
-        )
-
-        logger.info(
-            "Conversation saved successfully."
-        )
-
-    except Exception:
-
-        logger.exception(
-            "Failed to save conversation."
-        )
 
     # -----------------------------------------------------
     # Update Workflow State

@@ -1294,3 +1294,623 @@ postgrest.exceptions.APIError: {'message': 'insert or update on table "conversat
 2026-07-22 19:42:12,711 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
 2026-07-22 19:42:12,712 | INFO | SupportOS | Conversation saved successfully.
 2026-07-22 19:42:12,712 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:28:49,324 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-23 19:29:00,736 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-23 19:29:42,603 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 400 Bad Request"
+2026-07-23 19:29:42,608 | WARNING | SupportOS | Invalid email or password.
+2026-07-23 19:30:36,508 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 400 Bad Request"
+2026-07-23 19:30:36,510 | WARNING | SupportOS | Invalid email or password.
+2026-07-23 19:31:20,758 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 200 OK"
+2026-07-23 19:31:22,126 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&email=eq.kaif%40gmail.com "HTTP/2 200 OK"
+2026-07-23 19:32:45,092 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:32:45,093 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:32:45,093 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:32:45,266 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:32:45,272 | INFO | SupportOS | Loaded 3 conversation(s).
+2026-07-23 19:32:45,272 | INFO | SupportOS | Conversation history loaded: 3
+2026-07-23 19:32:45,280 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:32:45,281 | INFO | SupportOS | Question: Hello What is My name ?
+2026-07-23 19:32:45,281 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:32:45,281 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:32:45,283 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:32:45,596 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:32:45,597 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:32:45,598 | INFO | SupportOS | Using 3 conversation(s) from workflow state.
+2026-07-23 19:32:45,599 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:32:45,599 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:32:46,552 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:32:46,580 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:32:46,580 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:32:48,068 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:32:48,077 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:32:48,080 | INFO | SupportOS | Score=0.4893 | Title=Refund Policy
+2026-07-23 19:32:48,080 | INFO | SupportOS | Accepted document (0.4893)
+2026-07-23 19:32:48,081 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:32:48,081 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:32:48,082 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:32:48,082 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:32:48,082 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:32:49,151 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:32:49,159 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:32:49,160 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:32:49,160 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:32:49,163 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:32:49,163 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:32:49,165 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:32:49,165 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:32:49,166 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:32:49,167 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:32:49,320 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:32:49,322 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:32:49,322 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:34:08,811 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:34:08,814 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:34:08,815 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:34:08,953 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:34:08,954 | INFO | SupportOS | Loaded 4 conversation(s).
+2026-07-23 19:34:08,955 | INFO | SupportOS | Conversation history loaded: 4
+2026-07-23 19:34:08,958 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:34:08,959 | INFO | SupportOS | Question: What is our refund policy?
+2026-07-23 19:34:08,959 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:34:08,960 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:34:08,963 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:34:09,092 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:34:09,094 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:34:09,094 | INFO | SupportOS | Using 4 conversation(s) from workflow state.
+2026-07-23 19:34:09,096 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:34:09,097 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:34:10,079 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:34:10,107 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:34:10,108 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:34:11,595 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:34:11,598 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:34:11,599 | INFO | SupportOS | Score=0.7037 | Title=Refund Policy
+2026-07-23 19:34:11,600 | INFO | SupportOS | Accepted document (0.7037)
+2026-07-23 19:34:11,601 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:34:11,602 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:34:11,603 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:34:11,605 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:34:11,606 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:34:13,259 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:34:13,262 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:34:13,262 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:34:13,262 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:34:13,263 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:34:13,263 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:34:13,264 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:34:13,264 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:34:13,265 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:34:13,266 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:34:13,404 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:34:13,406 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:34:13,406 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:34:46,986 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:34:46,987 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:34:46,987 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:34:47,137 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:34:47,137 | INFO | SupportOS | Loaded 5 conversation(s).
+2026-07-23 19:34:47,138 | INFO | SupportOS | Conversation history loaded: 5
+2026-07-23 19:34:47,139 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:34:47,139 | INFO | SupportOS | Question: Who is the CEO of Mars Company in 2050?
+2026-07-23 19:34:47,139 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:34:47,139 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:34:47,140 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:34:47,267 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:34:47,268 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:34:47,268 | INFO | SupportOS | Using 5 conversation(s) from workflow state.
+2026-07-23 19:34:47,270 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:34:47,270 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:34:48,211 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:34:48,233 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:34:48,233 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:34:49,614 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:34:49,615 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:34:49,615 | INFO | SupportOS | Score=0.4773 | Title=Refund Policy
+2026-07-23 19:34:49,615 | INFO | SupportOS | Accepted document (0.4773)
+2026-07-23 19:34:49,616 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:34:49,616 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:34:49,616 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:34:49,617 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:34:49,617 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:34:51,412 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:34:51,414 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:34:51,414 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:34:51,415 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:34:51,416 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:34:51,416 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:34:51,417 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:34:51,417 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:34:51,418 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:34:51,418 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:34:51,666 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:34:51,667 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:34:51,667 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:36:57,079 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:36:57,080 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:36:57,080 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:36:57,206 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:36:57,210 | INFO | SupportOS | Loaded 5 conversation(s).
+2026-07-23 19:36:57,210 | INFO | SupportOS | Conversation history loaded: 5
+2026-07-23 19:36:57,212 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:36:57,213 | INFO | SupportOS | Question: My favourite color is blue.
+2026-07-23 19:36:57,213 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:36:57,213 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:36:57,214 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:36:57,507 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:36:57,507 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:36:57,508 | INFO | SupportOS | Using 5 conversation(s) from workflow state.
+2026-07-23 19:36:57,509 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:36:57,509 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:36:58,414 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:36:58,447 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:36:58,447 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:36:59,897 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:36:59,897 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:36:59,898 | INFO | SupportOS | Score=0.5008 | Title=Refund Policy
+2026-07-23 19:36:59,898 | INFO | SupportOS | Accepted document (0.5008)
+2026-07-23 19:36:59,898 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:36:59,898 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:36:59,899 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:36:59,899 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:36:59,899 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:37:02,141 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:37:02,142 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:37:02,143 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:37:02,143 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:37:02,145 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:37:02,145 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:37:02,146 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:37:02,146 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:37:02,147 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:37:02,147 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:37:02,296 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:37:02,297 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:37:02,297 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:37:23,722 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:37:23,723 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:37:23,724 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:37:23,846 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:37:23,847 | INFO | SupportOS | Loaded 5 conversation(s).
+2026-07-23 19:37:23,847 | INFO | SupportOS | Conversation history loaded: 5
+2026-07-23 19:37:23,848 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:37:23,848 | INFO | SupportOS | Question: What is my favourite color?
+2026-07-23 19:37:23,849 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:37:23,849 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:37:23,850 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:37:23,999 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:37:24,000 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:37:24,001 | INFO | SupportOS | Using 5 conversation(s) from workflow state.
+2026-07-23 19:37:24,002 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:37:24,002 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:37:24,917 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:37:24,944 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:37:24,944 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:37:26,319 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:37:26,320 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:37:26,321 | INFO | SupportOS | Score=0.4812 | Title=Refund Policy
+2026-07-23 19:37:26,321 | INFO | SupportOS | Accepted document (0.4812)
+2026-07-23 19:37:26,321 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:37:26,321 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:37:26,322 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:37:26,322 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:37:26,322 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:37:28,761 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:37:28,763 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:37:28,763 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:37:28,764 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:37:28,765 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:37:28,765 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:37:28,766 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:37:28,767 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:37:28,767 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:37:28,768 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:37:28,892 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:37:28,893 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:37:28,893 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:37:54,792 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:37:54,793 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:37:54,793 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:37:54,919 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:37:54,921 | INFO | SupportOS | Loaded 5 conversation(s).
+2026-07-23 19:37:54,922 | INFO | SupportOS | Conversation history loaded: 5
+2026-07-23 19:37:54,924 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:37:54,924 | INFO | SupportOS | Question: Remember that I live in Prayagraj.
+2026-07-23 19:37:54,924 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:37:54,924 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:37:54,926 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:37:55,054 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:37:55,055 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:37:55,056 | INFO | SupportOS | Using 5 conversation(s) from workflow state.
+2026-07-23 19:37:55,057 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:37:55,057 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:37:55,615 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:37:55,638 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:37:55,639 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:37:57,121 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:37:57,122 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:37:57,122 | INFO | SupportOS | Score=0.4902 | Title=Refund Policy
+2026-07-23 19:37:57,122 | INFO | SupportOS | Accepted document (0.4902)
+2026-07-23 19:37:57,123 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:37:57,123 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:37:57,123 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:37:57,124 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:37:57,124 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:38:01,125 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:38:01,127 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:38:01,127 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:38:01,127 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:38:01,128 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:38:01,128 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:38:01,129 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:38:01,129 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:38:01,129 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:38:01,130 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:38:01,377 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:38:01,378 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:38:01,378 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:38:22,456 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:38:22,457 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:38:22,458 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:38:22,595 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:38:22,596 | INFO | SupportOS | Loaded 5 conversation(s).
+2026-07-23 19:38:22,596 | INFO | SupportOS | Conversation history loaded: 5
+2026-07-23 19:38:22,598 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:38:22,599 | INFO | SupportOS | Question: Where do I live?
+2026-07-23 19:38:22,599 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:38:22,599 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:38:22,602 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:38:22,747 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:38:22,748 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:38:22,748 | INFO | SupportOS | Using 5 conversation(s) from workflow state.
+2026-07-23 19:38:22,749 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:38:22,750 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:38:23,360 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:38:23,384 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:38:23,384 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:38:24,835 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:38:24,836 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:38:24,836 | INFO | SupportOS | Score=0.49 | Title=Refund Policy
+2026-07-23 19:38:24,836 | INFO | SupportOS | Accepted document (0.49)
+2026-07-23 19:38:24,836 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:38:24,837 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:38:24,837 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:38:24,837 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:38:24,837 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:38:26,579 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:38:26,580 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:38:26,581 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:38:26,581 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:38:26,582 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:38:26,582 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:38:26,583 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:38:26,584 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:38:26,584 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:38:26,585 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:38:26,722 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:38:26,723 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:38:26,724 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:41:42,324 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-23 19:42:45,401 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 400 Bad Request"
+2026-07-23 19:42:45,403 | WARNING | SupportOS | Invalid email or password.
+2026-07-23 19:43:06,316 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 200 OK"
+2026-07-23 19:43:07,023 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&email=eq.kaif%40gmail.com "HTTP/2 200 OK"
+2026-07-23 19:43:25,289 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:43:25,291 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:43:25,291 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:43:25,435 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:43:25,436 | INFO | SupportOS | Loaded 5 conversation(s).
+2026-07-23 19:43:25,436 | INFO | SupportOS | Conversation history loaded: 5
+2026-07-23 19:43:25,448 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:43:25,448 | INFO | SupportOS | Question: My favourite color is blue.
+2026-07-23 19:43:25,449 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:43:25,449 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:43:25,450 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:43:25,603 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:43:25,603 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:43:25,603 | INFO | SupportOS | Using 5 conversation(s) from workflow state.
+2026-07-23 19:43:25,604 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:43:25,605 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:43:26,555 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:43:26,584 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:43:26,584 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:43:28,008 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:43:28,010 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:43:28,011 | INFO | SupportOS | Score=0.5008 | Title=Refund Policy
+2026-07-23 19:43:28,011 | INFO | SupportOS | Accepted document (0.5008)
+2026-07-23 19:43:28,011 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:43:28,012 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:43:28,012 | INFO | SupportOS | ========== PROMPT DEBUG ==========
+2026-07-23 19:43:28,012 | INFO | SupportOS | History Count: 5
+2026-07-23 19:43:28,012 | INFO | SupportOS | [{'id': '2859f792-4140-4ff8-ac21-4a285356785f', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'Who is the CEO of Mars Company in 2050?', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:04:51.538062+00:00'}, {'id': '4cb1a3df-0d19-4183-ae77-ecbfef546da3', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'My favourite color is blue.', 'answer': "Hello MD KAIF!\n\nThank you for sharing that your favorite color is blue.\n\nHow can I assist you further today with any support-related questions?\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:07:02.2297+00:00'}, {'id': '8e628a0b-1737-4f0e-9297-4a2e67947b76', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'What is my favourite color?', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:07:28.831033+00:00'}, {'id': 'c955b2ee-f34f-470f-800c-198565856911', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'Remember that I live in Prayagraj.', 'answer': "Hello MD KAIF!\n\nThank you for sharing that you live in Prayagraj.\n\nHow can I assist you further today with any support-related questions?\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:08:01.311972+00:00'}, {'id': 'f25a8e23-e458-4fba-90b5-d6f441f5c8e5', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'Where do I live?', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:08:26.65384+00:00'}]
+2026-07-23 19:43:28,013 | INFO | SupportOS | ==================================
+2026-07-23 19:43:28,013 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:43:28,013 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:43:28,013 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:43:38,872 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:43:38,876 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:43:38,876 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:43:38,877 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:43:38,879 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:43:38,879 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:43:38,882 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:43:38,883 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:43:38,884 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:43:38,886 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:43:39,152 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:43:39,155 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:43:39,155 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:44:06,641 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:44:06,643 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:44:06,643 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:44:06,774 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:44:06,775 | INFO | SupportOS | Loaded 5 conversation(s).
+2026-07-23 19:44:06,775 | INFO | SupportOS | Conversation history loaded: 5
+2026-07-23 19:44:06,776 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:44:06,776 | INFO | SupportOS | Question: My favourite color is blue.
+2026-07-23 19:44:06,777 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:44:06,777 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:44:06,778 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:44:06,907 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:44:06,909 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:44:06,909 | INFO | SupportOS | Using 5 conversation(s) from workflow state.
+2026-07-23 19:44:06,910 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:44:06,910 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:44:07,574 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:44:07,598 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:44:07,598 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:44:09,054 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:44:09,056 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:44:09,057 | INFO | SupportOS | Score=0.5008 | Title=Refund Policy
+2026-07-23 19:44:09,057 | INFO | SupportOS | Accepted document (0.5008)
+2026-07-23 19:44:09,058 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:44:09,058 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:44:09,059 | INFO | SupportOS | ========== PROMPT DEBUG ==========
+2026-07-23 19:44:09,059 | INFO | SupportOS | History Count: 5
+2026-07-23 19:44:09,060 | INFO | SupportOS | [{'id': '4cb1a3df-0d19-4183-ae77-ecbfef546da3', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'My favourite color is blue.', 'answer': "Hello MD KAIF!\n\nThank you for sharing that your favorite color is blue.\n\nHow can I assist you further today with any support-related questions?\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:07:02.2297+00:00'}, {'id': '8e628a0b-1737-4f0e-9297-4a2e67947b76', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'What is my favourite color?', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:07:28.831033+00:00'}, {'id': 'c955b2ee-f34f-470f-800c-198565856911', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'Remember that I live in Prayagraj.', 'answer': "Hello MD KAIF!\n\nThank you for sharing that you live in Prayagraj.\n\nHow can I assist you further today with any support-related questions?\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:08:01.311972+00:00'}, {'id': 'f25a8e23-e458-4fba-90b5-d6f441f5c8e5', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'Where do I live?', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:08:26.65384+00:00'}, {'id': 'b25ecb38-31fb-47af-b7d9-c062b3d5c605', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'My favourite color is blue.', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:13:39.074851+00:00'}]
+2026-07-23 19:44:09,060 | INFO | SupportOS | ==================================
+2026-07-23 19:44:09,061 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:44:09,062 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:44:09,062 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:44:20,097 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:44:20,099 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:44:20,099 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:44:20,099 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:44:20,100 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:44:20,100 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:44:20,101 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:44:20,101 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:44:20,101 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:44:20,102 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:44:20,316 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:44:20,317 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:44:20,318 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:44:58,004 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-23 19:45:06,649 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-23 19:45:32,728 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/auth/v1/token?grant_type=password "HTTP/2 200 OK"
+2026-07-23 19:45:33,453 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&email=eq.kaif%40gmail.com "HTTP/2 200 OK"
+2026-07-23 19:46:11,396 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:46:11,398 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:46:11,399 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:46:11,529 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:46:11,531 | INFO | SupportOS | Loaded 5 conversation(s).
+2026-07-23 19:46:11,532 | INFO | SupportOS | Conversation history loaded: 5
+2026-07-23 19:46:11,541 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:46:11,541 | INFO | SupportOS | Question: My favourite color is blue.
+2026-07-23 19:46:11,542 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:46:11,543 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:46:11,546 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:46:11,674 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:46:11,676 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:46:11,676 | INFO | SupportOS | Using 5 conversation(s) from workflow state.
+2026-07-23 19:46:11,679 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:46:11,680 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:46:12,262 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:46:12,290 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:46:12,291 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:46:13,765 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:46:13,770 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:46:13,770 | INFO | SupportOS | Score=0.5008 | Title=Refund Policy
+2026-07-23 19:46:13,771 | INFO | SupportOS | Accepted document (0.5008)
+2026-07-23 19:46:13,772 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:46:13,773 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:46:13,773 | INFO | SupportOS | ========== PROMPT DEBUG ==========
+2026-07-23 19:46:13,774 | INFO | SupportOS | History Count: 5
+2026-07-23 19:46:13,774 | INFO | SupportOS | [{'id': '8e628a0b-1737-4f0e-9297-4a2e67947b76', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'What is my favourite color?', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:07:28.831033+00:00'}, {'id': 'c955b2ee-f34f-470f-800c-198565856911', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'Remember that I live in Prayagraj.', 'answer': "Hello MD KAIF!\n\nThank you for sharing that you live in Prayagraj.\n\nHow can I assist you further today with any support-related questions?\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:08:01.311972+00:00'}, {'id': 'f25a8e23-e458-4fba-90b5-d6f441f5c8e5', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'Where do I live?', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:08:26.65384+00:00'}, {'id': 'b25ecb38-31fb-47af-b7d9-c062b3d5c605', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'My favourite color is blue.', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:13:39.074851+00:00'}, {'id': '41855594-c9c3-459b-9e81-03aed1a3090e', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'My favourite color is blue.', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nHow can I assist you further today with any support-related questions?\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:14:20.25033+00:00'}]
+2026-07-23 19:46:13,775 | INFO | SupportOS | ==================================
+2026-07-23 19:46:13,776 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:46:13,776 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:46:13,777 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:46:16,147 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:46:16,150 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:46:16,150 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:46:16,150 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:46:16,151 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:46:16,152 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:46:16,153 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:46:16,153 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:46:16,153 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:46:16,154 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:46:16,302 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:46:16,303 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:46:16,303 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:46:44,549 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:46:44,552 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:46:44,553 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:46:44,706 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:46:44,708 | INFO | SupportOS | Loaded 5 conversation(s).
+2026-07-23 19:46:44,709 | INFO | SupportOS | Conversation history loaded: 5
+2026-07-23 19:46:44,712 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:46:44,713 | INFO | SupportOS | Question: What is my favourite color?
+2026-07-23 19:46:44,713 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:46:44,714 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:46:44,716 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:46:44,835 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:46:44,837 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:46:44,837 | INFO | SupportOS | Using 5 conversation(s) from workflow state.
+2026-07-23 19:46:44,839 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:46:44,839 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:46:45,427 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:46:45,453 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:46:45,454 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:46:46,836 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:46:46,837 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:46:46,837 | INFO | SupportOS | Score=0.4812 | Title=Refund Policy
+2026-07-23 19:46:46,837 | INFO | SupportOS | Accepted document (0.4812)
+2026-07-23 19:46:46,837 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:46:46,838 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:46:46,838 | INFO | SupportOS | ========== PROMPT DEBUG ==========
+2026-07-23 19:46:46,838 | INFO | SupportOS | History Count: 5
+2026-07-23 19:46:46,839 | INFO | SupportOS | [{'id': 'c955b2ee-f34f-470f-800c-198565856911', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'Remember that I live in Prayagraj.', 'answer': "Hello MD KAIF!\n\nThank you for sharing that you live in Prayagraj.\n\nHow can I assist you further today with any support-related questions?\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:08:01.311972+00:00'}, {'id': 'f25a8e23-e458-4fba-90b5-d6f441f5c8e5', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'Where do I live?', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:08:26.65384+00:00'}, {'id': 'b25ecb38-31fb-47af-b7d9-c062b3d5c605', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'My favourite color is blue.', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:13:39.074851+00:00'}, {'id': '41855594-c9c3-459b-9e81-03aed1a3090e', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'My favourite color is blue.', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nHow can I assist you further today with any support-related questions?\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:14:20.25033+00:00'}, {'id': 'a1904c9d-e177-40bd-b4c7-1fa2e7b44022', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'My favourite color is blue.', 'answer': "Hello MD KAIF!\n\nI couldn't find that information in the knowledge base.\n\nHow can I assist you further today with any support-related questions?\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:16:16.218815+00:00'}]
+2026-07-23 19:46:46,839 | INFO | SupportOS | ==================================
+2026-07-23 19:46:46,839 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:46:46,839 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:46:46,840 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:46:48,700 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:46:48,702 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:46:48,702 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:46:48,703 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:46:48,703 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:46:48,704 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:46:48,704 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:46:48,705 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:46:48,705 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:46:48,705 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:46:48,823 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:46:48,824 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:46:48,824 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:52:40,301 | INFO | httpx | HTTP Request: GET https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333 "HTTP/1.1 200 OK"
+2026-07-23 19:55:44,530 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:55:44,532 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:55:44,532 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:55:44,675 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:55:44,676 | INFO | SupportOS | Loaded 0 conversation(s).
+2026-07-23 19:55:44,676 | INFO | SupportOS | Conversation history loaded: 0
+2026-07-23 19:55:44,681 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:55:44,681 | INFO | SupportOS | Question: My favourite color is blue.
+2026-07-23 19:55:44,682 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:55:44,682 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:55:44,684 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:55:44,810 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:55:44,810 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:55:44,811 | INFO | SupportOS | Using 0 conversation(s) from workflow state.
+2026-07-23 19:55:44,812 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:55:44,813 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:55:45,766 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:55:45,798 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:55:45,799 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:55:47,247 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:55:47,248 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:55:47,249 | INFO | SupportOS | Score=0.5008 | Title=Refund Policy
+2026-07-23 19:55:47,249 | INFO | SupportOS | Accepted document (0.5008)
+2026-07-23 19:55:47,249 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:55:47,257 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:55:47,258 | INFO | SupportOS | ========== PROMPT DEBUG ==========
+2026-07-23 19:55:47,258 | INFO | SupportOS | History Count: 0
+2026-07-23 19:55:47,258 | INFO | SupportOS | []
+2026-07-23 19:55:47,258 | INFO | SupportOS | ==================================
+2026-07-23 19:55:47,259 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:55:47,259 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:55:47,259 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:55:52,442 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:55:52,444 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:55:52,444 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:55:52,444 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:55:52,446 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:55:52,447 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:55:52,448 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:55:52,448 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:55:52,448 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:55:52,449 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:55:52,668 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:55:52,670 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:55:52,670 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:56:33,795 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:56:33,797 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:56:33,797 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:56:33,917 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:56:33,918 | INFO | SupportOS | Loaded 1 conversation(s).
+2026-07-23 19:56:33,918 | INFO | SupportOS | Conversation history loaded: 1
+2026-07-23 19:56:33,919 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:56:33,920 | INFO | SupportOS | Question: What is myu name ?
+2026-07-23 19:56:33,920 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:56:33,920 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:56:33,921 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:56:34,044 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:56:34,045 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:56:34,045 | INFO | SupportOS | Using 1 conversation(s) from workflow state.
+2026-07-23 19:56:34,046 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:56:34,046 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:56:34,962 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:56:34,989 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:56:34,990 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:56:36,595 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:56:36,596 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:56:36,596 | INFO | SupportOS | Score=0.4978 | Title=Refund Policy
+2026-07-23 19:56:36,597 | INFO | SupportOS | Accepted document (0.4978)
+2026-07-23 19:56:36,597 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:56:36,597 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:56:36,597 | INFO | SupportOS | ========== PROMPT DEBUG ==========
+2026-07-23 19:56:36,598 | INFO | SupportOS | History Count: 1
+2026-07-23 19:56:36,598 | INFO | SupportOS | [{'id': '8bc25fbb-0f8e-4486-bb43-ae3adc563aa3', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'My favourite color is blue.', 'answer': "Okay, I've noted that your favorite color is blue.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:25:52.598908+00:00'}]
+2026-07-23 19:56:36,598 | INFO | SupportOS | ==================================
+2026-07-23 19:56:36,598 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:56:36,599 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:56:36,599 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:56:37,868 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:56:37,871 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:56:37,871 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:56:37,871 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:56:37,873 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:56:37,873 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:56:37,875 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:56:37,875 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:56:37,875 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:56:37,876 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:56:37,999 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:56:38,000 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:56:38,000 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:57:06,076 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/users?select=%2A&id=eq.34744114-2573-4bc1-9e4c-da85836e21c4 "HTTP/2 200 OK"
+2026-07-23 19:57:06,077 | INFO | SupportOS | Starting LangGraph workflow...
+2026-07-23 19:57:06,077 | INFO | SupportOS | Loading conversation history...
+2026-07-23 19:57:06,194 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111&order=created_at.desc&limit=5 "HTTP/2 200 OK"
+2026-07-23 19:57:06,195 | INFO | SupportOS | Loaded 2 conversation(s).
+2026-07-23 19:57:06,195 | INFO | SupportOS | Conversation history loaded: 2
+2026-07-23 19:57:06,196 | INFO | SupportOS | Orchestrator Agent Started
+2026-07-23 19:57:06,196 | INFO | SupportOS | Question: What is my favourite color?
+2026-07-23 19:57:06,196 | INFO | SupportOS | Next Agent: knowledge_agent
+2026-07-23 19:57:06,197 | INFO | SupportOS | Orchestrator Agent Finished
+2026-07-23 19:57:06,197 | INFO | SupportOS | Knowledge Agent Started
+2026-07-23 19:57:06,316 | INFO | httpx | HTTP Request: GET https://uruiktwecwoepmofxltp.supabase.co/rest/v1/user_profiles?select=%2A&user_id=eq.34744114-2573-4bc1-9e4c-da85836e21c4&tenant_id=eq.11111111-1111-1111-1111-111111111111 "HTTP/2 200 OK"
+2026-07-23 19:57:06,317 | INFO | SupportOS | User profile loaded.
+2026-07-23 19:57:06,317 | INFO | SupportOS | Using 2 conversation(s) from workflow state.
+2026-07-23 19:57:06,318 | INFO | SupportOS | Searching Knowledge Base...
+2026-07-23 19:57:06,319 | INFO | SupportOS | Generating embedding...
+2026-07-23 19:57:07,258 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-embedding-001:batchEmbedContents "HTTP/1.1 200 OK"
+2026-07-23 19:57:07,285 | INFO | SupportOS | Embedding generated successfully. Dimension: 3072
+2026-07-23 19:57:07,285 | INFO | SupportOS | Searching top 3 documents for tenant 11111111-1111-1111-1111-111111111111
+2026-07-23 19:57:09,039 | INFO | httpx | HTTP Request: POST https://10c9b2d4-487d-4936-a076-4bdb5bcdefb0.us-east-2-0.aws.cloud.qdrant.io:6333/collections/support_docs/points/query "HTTP/1.1 200 OK"
+2026-07-23 19:57:09,040 | INFO | SupportOS | Raw points returned: 1
+2026-07-23 19:57:09,040 | INFO | SupportOS | Score=0.4812 | Title=Refund Policy
+2026-07-23 19:57:09,041 | INFO | SupportOS | Accepted document (0.4812)
+2026-07-23 19:57:09,041 | INFO | SupportOS | Retrieved 1 document(s).
+2026-07-23 19:57:09,041 | INFO | SupportOS | Retrieved 1 document(s) from Qdrant.
+2026-07-23 19:57:09,042 | INFO | SupportOS | ========== PROMPT DEBUG ==========
+2026-07-23 19:57:09,042 | INFO | SupportOS | History Count: 2
+2026-07-23 19:57:09,042 | INFO | SupportOS | [{'id': '8bc25fbb-0f8e-4486-bb43-ae3adc563aa3', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'My favourite color is blue.', 'answer': "Okay, I've noted that your favorite color is blue.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:25:52.598908+00:00'}, {'id': '5a9d70e2-2a97-4288-a09a-e5977a4e8940', 'user_id': '34744114-2573-4bc1-9e4c-da85836e21c4', 'tenant_id': '11111111-1111-1111-1111-111111111111', 'question': 'What is myu name ?', 'answer': "Your name is MD KAIF.\n\nDoes this solve your problem?\n\nIf not, I'm happy to help you further.", 'created_at': '2026-07-23T14:26:37.930793+00:00'}]
+2026-07-23 19:57:09,042 | INFO | SupportOS | ==================================
+2026-07-23 19:57:09,043 | INFO | SupportOS | Prompt built successfully.
+2026-07-23 19:57:09,043 | INFO | SupportOS | Generating AI response...
+2026-07-23 19:57:09,043 | INFO | google_genai.models | AFC is enabled with max remote calls: 10.
+2026-07-23 19:57:10,505 | INFO | httpx | HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent "HTTP/1.1 200 OK"
+2026-07-23 19:57:10,507 | INFO | SupportOS | AI response generated successfully.
+2026-07-23 19:57:10,507 | INFO | SupportOS | Gemini response generated successfully.
+2026-07-23 19:57:10,507 | INFO | SupportOS | Knowledge Agent Finished Successfully.
+2026-07-23 19:57:10,509 | INFO | SupportOS | FollowUp Agent Started
+2026-07-23 19:57:10,509 | INFO | SupportOS | FollowUp Agent Finished Successfully.
+2026-07-23 19:57:10,510 | INFO | SupportOS | Judge Agent Started
+2026-07-23 19:57:10,510 | INFO | SupportOS | Final answer approved.
+2026-07-23 19:57:10,510 | INFO | SupportOS | Judge Agent Finished
+2026-07-23 19:57:10,511 | INFO | SupportOS | Workflow completed.
+2026-07-23 19:57:10,640 | INFO | httpx | HTTP Request: POST https://uruiktwecwoepmofxltp.supabase.co/rest/v1/conversations "HTTP/2 201 Created"
+2026-07-23 19:57:10,641 | INFO | SupportOS | Conversation saved successfully.
+2026-07-23 19:57:10,641 | INFO | SupportOS | Conversation saved successfully.

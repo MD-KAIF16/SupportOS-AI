@@ -39,6 +39,13 @@ class ConversationService:
         tenant_id: UUID,
         limit: int = 5,
     ) -> list[dict]:
+        """
+        Fetch recent conversations for a user.
+
+        Returns conversations in chronological order
+        (oldest → newest) so that the LLM can understand
+        the conversation flow naturally.
+        """
 
         try:
 
@@ -53,11 +60,16 @@ class ConversationService:
                 .execute()
             )
 
+            history = response.data or []
+
+            # Convert newest->oldest into oldest->newest
+            history.reverse()
+
             logger.info(
-                f"Loaded {len(response.data)} conversation(s)."
+                f"Loaded {len(history)} conversation(s)."
             )
 
-            return response.data or []
+            return history
 
         except Exception as e:
 
@@ -78,6 +90,9 @@ class ConversationService:
         question: str,
         answer: str,
     ) -> None:
+        """
+        Save a new conversation to the database.
+        """
 
         try:
 
@@ -95,7 +110,9 @@ class ConversationService:
                 .execute()
             )
 
-            logger.info("Conversation saved successfully.")
+            logger.info(
+                "Conversation saved successfully."
+            )
 
         except Exception as e:
 
