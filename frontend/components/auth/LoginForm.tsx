@@ -5,7 +5,10 @@
 // ======================================================
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { login } from "@/services/auth.service";
+import { useAuth } from "@/context/AuthContext";
 
 import Logo from "../common/Logo";
 import Input from "../common/Input";
@@ -13,22 +16,83 @@ import Button from "../common/Button";
 
 export default function LoginForm() {
 
-  // ===============================
+  // =====================================================
+  // React Router
+  // =====================================================
+
+  const router = useRouter();
+
+  // =====================================================
+  // Auth Context
+  // =====================================================
+
+  const { login: loginUser } = useAuth();
+
+  // =====================================================
   // React State
-  // ===============================
+  // =====================================================
 
   const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
 
-  // ===============================
+  const [loading, setLoading] = useState(false);
+
+  const [error, setError] = useState("");
+
+  // =====================================================
   // Login Button Click
-  // ===============================
+  // =====================================================
 
   const handleLogin = async () => {
 
-    await login(email, password);
+    try {
 
-};
+      setLoading(true);
+
+      setError("");
+
+      // =============================================
+      // Call Login API
+      // =============================================
+
+      const response = await login(
+        email,
+        password
+      );
+
+      // =============================================
+      // Save User + JWT in Auth Context
+      // =============================================
+
+      loginUser(
+        {
+          user_id: response.data.user_id,
+          email: response.data.email,
+          role: response.data.role,
+        },
+        response.data.access_token
+      );
+
+      // =============================================
+      // Navigate to Chat Page
+      // =============================================
+
+      router.push("/chat");
+
+    } catch (err: any) {
+
+      setError(
+        err.message || "Login Failed"
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
 
   return (
 
@@ -54,9 +118,15 @@ export default function LoginForm() {
 
         {/* ================= Login Form ================= */}
 
-        <form className="space-y-5">
+        <form
+          className="space-y-5"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();
+          }}
+        >
 
-          {/* Email */}
+          {/* ================= Email ================= */}
 
           <div>
 
@@ -74,7 +144,7 @@ export default function LoginForm() {
 
           </div>
 
-          {/* Password */}
+          {/* ================= Password ================= */}
 
           <div>
 
@@ -103,14 +173,32 @@ export default function LoginForm() {
 
           </div>
 
-          {/* Login Button */}
+          {/* ================= Error ================= */}
+
+          {
+            error && (
+
+              <div className="rounded-lg bg-red-100 p-3 text-sm text-red-600">
+
+                {error}
+
+              </div>
+
+            )
+          }
+
+          {/* ================= Login Button ================= */}
 
           <Button
-            text="Login"
+            text={
+              loading
+                ? "Logging in..."
+                : "Login"
+            }
             onClick={handleLogin}
           />
 
-          {/* Register */}
+          {/* ================= Register ================= */}
 
           <p className="text-center text-sm text-slate-500">
 
@@ -132,4 +220,5 @@ export default function LoginForm() {
     </main>
 
   );
+
 }

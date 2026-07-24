@@ -1,32 +1,65 @@
-// ====================================
-// Send Message To FastAPI Backend
-// ====================================
+// ======================================================
+// Chat Service
+//
+// Purpose:
+// Handles all chat related API calls
+// ======================================================
 
-export async function sendMessage(message: string) {
+const BASE_URL = "http://127.0.0.1:8000";
+
+// ======================================================
+// Send Message
+// ======================================================
+
+export async function sendMessage(
+  question: string,
+  token: string
+) {
+
+  // ============================================
+  // Call Chat API
+  // ============================================
 
   const response = await fetch(
-    "http://127.0.0.1:8000/chat/",
+    `${BASE_URL}/chat`,
     {
+
       method: "POST",
 
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
 
       body: JSON.stringify({
-        tenant_id: "83984207-48dd-453f-9fb7-cb7f18bf82e3",
-        message: message,
+        question,
       }),
+
     }
   );
 
-  // Backend error
+  // ============================================
+  // Convert Response
+  // ============================================
+
+  const result = await response.json();
+
+  // ============================================
+  // Error Handling
+  // ============================================
+
   if (!response.ok) {
-    throw new Error("Backend Error");
+
+    throw new Error(
+      result.message || "Failed to send message."
+    );
+
   }
 
-  // JSON Response
-  const data = await response.json();
+  // ============================================
+  // Return Result
+  // ============================================
 
-  return data;
+  return result;
+
 }

@@ -1,22 +1,62 @@
 // ======================================================
 // Authentication Service
+//
 // Purpose:
 // Handles all authentication related API calls
 // ======================================================
+
+// ------------------------------------------------------
+// Backend Base URL
+// ------------------------------------------------------
+
+const BASE_URL = "http://127.0.0.1:8000";
+
+// ------------------------------------------------------
+// Login API
+// ------------------------------------------------------
 
 export async function login(
   email: string,
   password: string
 ) {
 
-  console.log("================================");
+  // --------------------------------------------
+  // Send Login Request
+  // --------------------------------------------
 
-  console.log("Login API Called");
+  const response = await fetch(
+    `${BASE_URL}/api/auth/login`,
+    {
+      method: "POST",
 
-  console.log("Email :", email);
+      headers: {
+        "Content-Type": "application/json",
+      },
 
-  console.log("Password :", password);
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    }
+  );
 
-  console.log("================================");
+  // --------------------------------------------
+  // Convert Response
+  // --------------------------------------------
 
+  const result = await response.json();
+
+  // --------------------------------------------
+  // Check Error
+  // --------------------------------------------
+
+  if (!response.ok) {
+    throw new Error(result.message || "Login Failed");
+  }
+
+  // --------------------------------------------
+  // Return Backend Response
+  // --------------------------------------------
+
+  return result;
 }

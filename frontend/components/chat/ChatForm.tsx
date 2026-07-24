@@ -5,8 +5,10 @@
 // ======================================================
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { sendMessage } from "@/services/chat.service";
+import { useAuth } from "@/context/AuthContext";
 
 import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
@@ -19,35 +21,72 @@ type Message = {
 
 export default function ChatForm() {
 
-  // ==========================================
+  // =====================================================
+  // Router
+  // =====================================================
+
+  const router = useRouter();
+
+  // =====================================================
+  // Auth Context
+  // =====================================================
+
+  const {
+    token,
+    logout,
+  } = useAuth();
+
+  // =====================================================
   // User Input
-  // ==========================================
+  // =====================================================
 
   const [message, setMessage] = useState("");
 
-  // ==========================================
+  // =====================================================
   // Conversation
-  // ==========================================
+  // =====================================================
 
   const [messages, setMessages] = useState<Message[]>([]);
 
-  // ==========================================
+  // =====================================================
   // Loading
-  // ==========================================
+  // =====================================================
 
   const [loading, setLoading] = useState(false);
 
-  // ==========================================
+  // =====================================================
+  // Logout
+  // =====================================================
+
+  const handleLogout = () => {
+
+    logout();
+
+    router.replace("/");
+
+  };
+
+  // =====================================================
   // Send Message
-  // ==========================================
+  // =====================================================
 
   const handleSend = async () => {
 
     if (!message.trim()) return;
 
+    if (!token) {
+
+      router.replace("/");
+
+      return;
+
+    }
+
     const currentMessage = message;
 
-    // User Message
+    // ---------------------------------------------
+    // Add User Message
+    // ---------------------------------------------
 
     setMessages((prev) => [
       ...prev,
@@ -63,17 +102,30 @@ export default function ChatForm() {
 
     try {
 
-      const data = await sendMessage(currentMessage);
+      // ---------------------------------------------
+      // Call Backend
+      // ---------------------------------------------
+
+      const response = await sendMessage(
+        currentMessage,
+        token
+      );
+
+      // ---------------------------------------------
+      // Add AI Response
+      // ---------------------------------------------
 
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          text: data.reply,
+          text: response.data.reply,
         },
       ]);
 
-    } catch {
+    } catch (error) {
+
+      console.error(error);
 
       setMessages((prev) => [
         ...prev,
@@ -97,17 +149,34 @@ export default function ChatForm() {
 
       <div className="w-full max-w-7xl rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl">
 
-        {/* Header */}
+        {/* =========================================
+            Header
+        ========================================== */}
 
-        <ChatHeader />
+        <div className="mb-6 flex items-center justify-between">
 
-        {/* Messages */}
+          <ChatHeader />
+
+          <button
+            onClick={handleLogout}
+            className="rounded-lg bg-red-500 px-4 py-2 text-white transition hover:bg-red-600"
+          >
+            Logout
+          </button>
+
+        </div>
+
+        {/* =========================================
+            Messages
+        ========================================== */}
 
         <ChatMessages
           messages={messages}
         />
 
-        {/* Input */}
+        {/* =========================================
+            Chat Input
+        ========================================== */}
 
         <ChatInput
           message={message}
