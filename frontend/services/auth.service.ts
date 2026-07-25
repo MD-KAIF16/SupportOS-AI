@@ -51,7 +51,9 @@ export async function login(
   // --------------------------------------------
 
   if (!response.ok) {
-    throw new Error(result.message || "Login Failed");
+    throw new Error(
+      result.message || "Login Failed"
+    );
   }
 
   // --------------------------------------------
@@ -59,4 +61,38 @@ export async function login(
   // --------------------------------------------
 
   return result;
+}
+
+// ------------------------------------------------------
+// Get Current Logged In User
+// ------------------------------------------------------
+
+export async function getCurrentUser(
+  token: string
+) {
+
+  const response = await fetch(
+    `${BASE_URL}/api/user/me`,
+    {
+      method: "GET",
+
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  // --------------------------------------------
+  // Check Error
+  // --------------------------------------------
+
+  if (!response.ok) {
+    throw new Error("Session Expired");
+  }
+
+  // --------------------------------------------
+  // Return User
+  // --------------------------------------------
+
+  return await response.json();
 }

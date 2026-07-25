@@ -16,23 +16,13 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function ChatPage() {
 
-  // =====================================================
-  // Router
-  // =====================================================
-
   const router = useRouter();
 
-  // =====================================================
-  // Authentication Context
-  // =====================================================
-
-  const { token } = useAuth();
-
-  // =====================================================
-  // Protect Route
-  // =====================================================
+  const { token, loading } = useAuth();
 
   useEffect(() => {
+
+    if (loading) return;
 
     if (!token) {
 
@@ -40,21 +30,27 @@ export default function ChatPage() {
 
     }
 
-  }, [token, router]);
+  }, [loading, token, router]);
 
-  // =====================================================
-  // Prevent Page Flash
-  // =====================================================
+  if (loading) {
+
+    return (
+
+      <div className="flex min-h-screen items-center justify-center">
+
+        Loading...
+
+      </div>
+
+    );
+
+  }
 
   if (!token) {
 
     return null;
 
   }
-
-  // =====================================================
-  // Chat UI
-  // =====================================================
 
   return <ChatForm />;
 

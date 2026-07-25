@@ -8,12 +8,14 @@
 // ======================================================
 
 import {
-    createContext,
-   useContext,
+  createContext,
+  useContext,
   useEffect,
   useState,
   ReactNode,
 } from "react";
+
+import { getCurrentUser } from "@/services/auth.service";
 
 // ======================================================
 // User Type
@@ -32,6 +34,7 @@ type User = {
 type AuthContextType = {
   user: User | null;
   token: string | null;
+  loading: boolean;
 
   login: (
     user: User,
@@ -67,23 +70,66 @@ export function AuthProvider({
 
   const [token, setToken] = useState<string | null>(null);
 
+  const [loading, setLoading] = useState(true);
+
   // ===========================================
   // Restore Session
   // ===========================================
 
   useEffect(() => {
 
-    const savedUser = localStorage.getItem("user");
+    const restoreSession = async () => {
 
-    const savedToken = localStorage.getItem("token");
+      const savedToken = localStorage.getItem("token");
 
-    if (savedUser && savedToken) {
+      if (!savedToken) {
 
-      setUser(JSON.parse(savedUser));
+        setLoading(false);
 
-      setToken(savedToken);
+        return;
 
-    }
+      }
+
+      try {
+
+        // Verify Token with Backend
+
+        const currentUser = await getCurrentUser(savedToken);
+
+        setUser({
+          user_id: currentUser.user_id,
+          email: currentUser.email,
+          role: currentUser.role,
+        });
+
+        setToken(savedToken);
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(currentUser)
+        );
+
+      } catch {
+
+        // Invalid / Expired Token
+
+        setUser(null);
+
+        setToken(null);
+
+        localStorage.removeItem("user");
+
+        localStorage.removeItem("token");
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+    restoreSession();
 
   }, []);
 
@@ -99,6 +145,8 @@ export function AuthProvider({
     setUser(user);
 
     setToken(token);
+
+    setLoading(false);
 
     localStorage.setItem(
       "user",
@@ -122,6 +170,8 @@ export function AuthProvider({
 
     setToken(null);
 
+    setLoading(false);
+
     localStorage.removeItem("user");
 
     localStorage.removeItem("token");
@@ -138,6 +188,7 @@ export function AuthProvider({
       value={{
         user,
         token,
+        loading,
         login,
         logout,
       }}
