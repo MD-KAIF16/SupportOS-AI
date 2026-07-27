@@ -90,5 +90,5 @@ def get_my_tickets(
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to fetch tickets: {str(e)}",
+            detail=f"Failed to fetch tickets !: {str(e)}",
         )
