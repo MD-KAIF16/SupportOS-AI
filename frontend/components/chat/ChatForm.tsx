@@ -4,7 +4,7 @@
 // Chat Form Component
 // ======================================================
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import { sendMessage } from "@/services/chat.service";
@@ -14,9 +14,14 @@ import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 
+// ======================================================
+// Types
+// ======================================================
+
 type Message = {
   role: "user" | "assistant";
   text: string;
+  timestamp: string;
 };
 
 export default function ChatForm() {
@@ -31,10 +36,7 @@ export default function ChatForm() {
   // Auth Context
   // =====================================================
 
-  const {
-    token,
-    logout,
-  } = useAuth();
+  const { token, logout } = useAuth();
 
   // =====================================================
   // User Input
@@ -53,6 +55,18 @@ export default function ChatForm() {
   // =====================================================
 
   const [loading, setLoading] = useState(false);
+
+  // =====================================================
+  // Auto Scroll Ref
+  // =====================================================
+
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages, loading]);
 
   // =====================================================
   // Logout
@@ -84,15 +98,15 @@ export default function ChatForm() {
 
     const currentMessage = message;
 
-    // ---------------------------------------------
-    // Add User Message
-    // ---------------------------------------------
-
     setMessages((prev) => [
       ...prev,
       {
         role: "user",
         text: currentMessage,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
       },
     ]);
 
@@ -102,24 +116,20 @@ export default function ChatForm() {
 
     try {
 
-      // ---------------------------------------------
-      // Call Backend
-      // ---------------------------------------------
-
       const response = await sendMessage(
         currentMessage,
         token
       );
-
-      // ---------------------------------------------
-      // Add AI Response
-      // ---------------------------------------------
 
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
           text: response.data.reply,
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
         },
       ]);
 
@@ -132,6 +142,10 @@ export default function ChatForm() {
         {
           role: "assistant",
           text: "Something went wrong. Please try again.",
+          timestamp: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
         },
       ]);
 
@@ -172,6 +186,8 @@ export default function ChatForm() {
 
         <ChatMessages
           messages={messages}
+          loading={loading}
+          messagesEndRef={messagesEndRef}
         />
 
         {/* =========================================

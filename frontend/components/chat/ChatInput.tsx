@@ -19,15 +19,15 @@ export default function ChatInput({
   handleSend,
 }: ChatInputProps) {
 
-  // ==========================================
-  // Send message on Enter key
-  // ==========================================
+  // =====================================================
+  // Enter Key
+  // =====================================================
 
   const handleKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
 
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !loading) {
 
       e.preventDefault();
 
@@ -39,28 +39,33 @@ export default function ChatInput({
 
   return (
 
-    <div className="mt-6 flex items-end gap-3">
+    <div className="mt-6 flex items-end gap-4">
 
-      {/* ================= Input ================= */}
+      {/* =========================================
+          Input
+      ========================================== */}
 
       <div className="flex-1">
 
         <Input
           type="text"
-          placeholder="Ask anything..."
+          placeholder="Type your message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
 
       </div>
 
-      {/* ================= Send Button ================= */}
+      {/* =========================================
+          Button
+      ========================================== */}
 
-      <div className="w-36">
+      <div className="w-40">
 
         <Button
           text={loading ? "Thinking..." : "Send"}
-          disabled={loading}
+          disabled={loading || !message.trim()}
           onClick={handleSend}
         />
 
