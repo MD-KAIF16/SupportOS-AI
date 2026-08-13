@@ -11,7 +11,8 @@ import {
   LogOut, 
   ShieldCheck, 
   LayoutDashboard,
-  Building2
+  Building2,
+  Settings
 } from "lucide-react";
 import Logo from "@/components/common/Logo";
 import { useAuth } from "@/context/AuthContext";
@@ -61,6 +62,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     { name: "Analytics", path: "/admin/analytics", icon: BarChart3 },
     { name: "Support Tickets", path: "/admin/tickets", icon: Ticket },
     { name: "AI Chat Console", path: "/admin/chat", icon: MessageSquare },
+    { name: "Organization Settings", path: "/admin/settings", icon: Settings },
   ];
 
   const handleLogout = () => {

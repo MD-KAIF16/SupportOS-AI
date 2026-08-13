@@ -9,7 +9,8 @@ import {
   LogOut, 
   User as UserIcon,
   ShieldCheck,
-  LayoutDashboard
+  LayoutDashboard,
+  Settings
 } from "lucide-react";
 import Logo from "@/components/common/Logo";
 import { useAuth } from "@/context/AuthContext";
@@ -57,6 +58,7 @@ export default function CustomerLayout({ children }: { children: ReactNode }) {
     { name: "Dashboard", path: "/customer/dashboard", icon: LayoutDashboard },
     { name: "AI Support Chat", path: "/customer/chat", icon: MessageSquare },
     { name: "My Tickets", path: "/customer/tickets", icon: Ticket },
+    { name: "Settings", path: "/customer/settings", icon: Settings },
   ];
 
   return (

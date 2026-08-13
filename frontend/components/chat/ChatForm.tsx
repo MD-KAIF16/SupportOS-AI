@@ -128,7 +128,7 @@ export default function ChatForm() {
         ...prev,
         {
           role: "assistant",
-          text: "I encountered an issue processing your request. Please check your network or try again.",
+          text: "AI Support is temporarily unavailable. Please try again in a moment.",
           timestamp: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",

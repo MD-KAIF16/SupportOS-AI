@@ -176,6 +176,7 @@ class AuthService:
             new_user_payload = {
                 "id": user_id,
                 "email": email,
+                "name": full_name or email.split("@")[0],
                 "role": assigned_role,
                 "tenant_id": default_tenant_id,
             }
