@@ -46,20 +46,23 @@ class ProfileService:
         Fetch Digital Twin profile.
         """
 
-        response = (
-            self.db
-            .table("user_profiles")
-            .select("*")
-            .eq("user_id", str(user_id))
-            .eq("tenant_id", str(tenant_id))
-            .single()
-            .execute()
-        )
+        try:
+            response = (
+                self.db
+                .table("user_profiles")
+                .select("*")
+                .eq("user_id", str(user_id))
+                .eq("tenant_id", str(tenant_id))
+                .execute()
+            )
 
-        if not response.data:
+            if not response.data:
+                return {}
+
+            return response.data[0]
+        except Exception:
             return {}
 
-        return response.data
 
 
 profile_service = ProfileService()

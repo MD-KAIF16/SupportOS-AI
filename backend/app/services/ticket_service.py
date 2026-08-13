@@ -100,5 +100,37 @@ class TicketService:
 
             return []
 
+    # =====================================================
+    # Get Tenant Tickets (Admin Oversight)
+    # =====================================================
 
-ticket_service = TicketService()
+    def get_tenant_tickets(
+        self,
+        tenant_id: UUID,
+    ) -> list[dict]:
+        """
+        Fetch all support tickets belonging to a tenant (Admin view).
+        """
+        try:
+
+            response = (
+                self.db
+                .table("tickets")
+                .select("*")
+                .eq("tenant_id", str(tenant_id))
+                .order("created_at", desc=True)
+                .execute()
+            )
+
+            return response.data or []
+
+        except Exception as e:
+
+            logger.exception(
+                f"Failed to fetch tenant tickets: {e}"
+            )
+
+            return []
+
+
+ticket_service = TicketService()

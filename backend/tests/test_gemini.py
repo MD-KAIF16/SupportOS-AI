@@ -2,16 +2,14 @@ import os
 from dotenv import load_dotenv
 from google import genai
 
-load_dotenv()
-
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
-
-response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents="Who are you? Reply in exactly 5 words."
-)
-
-#print(response)
-print(response.text)
+def test_gemini_generation():
+    load_dotenv()
+    client = genai.Client(
+        api_key=os.getenv("GEMINI_API_KEY")
+    )
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents="Hello Gemini! Reply in 3 words."
+    )
+    assert response.text is not None
+    assert len(response.text) > 0

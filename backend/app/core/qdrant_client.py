@@ -9,4 +9,6 @@ from app.core.config import (
 qdrant = QdrantClient(
     url=QDRANT_URL,
     api_key=QDRANT_API_KEY,
-)
+    timeout=60.0,
+    check_compatibility=False,
+)

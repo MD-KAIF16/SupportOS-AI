@@ -23,6 +23,7 @@ from app.core.exceptions import (
     ChatGenerationException,
     DocumentNotFoundException,
     AuthenticationException,
+    AuthorizationException,
 )
 
 
@@ -113,7 +114,7 @@ def register_exception_handlers(app: FastAPI):
         )
 
     # =====================================================
-    # Authentication Exception
+    # Authentication Exception (HTTP 401)
     # =====================================================
 
     @app.exception_handler(AuthenticationException)
@@ -132,6 +133,28 @@ def register_exception_handlers(app: FastAPI):
                 "data": None,
             },
         )
+
+    # =====================================================
+    # Authorization Exception (HTTP 403)
+    # =====================================================
+
+    @app.exception_handler(AuthorizationException)
+    async def authorization_handler(
+        request: Request,
+        exc: AuthorizationException,
+    ):
+
+        logger.warning(str(exc))
+
+        return JSONResponse(
+            status_code=403,
+            content={
+                "success": False,
+                "message": str(exc),
+                "data": None,
+            },
+        )
+
 
     # =====================================================
     # Unknown Exception

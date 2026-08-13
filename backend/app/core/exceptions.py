@@ -72,5 +72,10 @@ class DocumentNotFoundException(SupportOSException):
 # =========================================================
 
 class AuthenticationException(SupportOSException):
-    """Raised when authentication fails."""
+    """Raised when authentication fails (HTTP 401)."""
     pass
+
+
+class AuthorizationException(SupportOSException):
+    """Raised when user lacks permission/role (HTTP 403)."""
+    pass

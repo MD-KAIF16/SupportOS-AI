@@ -9,6 +9,7 @@ and issue backend JWT.
 """
 
 from supabase_auth.errors import AuthApiError
+from app.core.logger import logger
 
 from app.core.supabase_client import (
     supabase_auth,
@@ -47,13 +48,21 @@ class AuthService:
                 }
             )
 
-        except AuthApiError:
+        except AuthApiError as ae:
 
+            logger.warning(f"Supabase AuthApiError during login for {email}: {ae}")
             raise AuthenticationException(
                 "Invalid email or password."
             )
 
-        if not auth_response.user:
+        except Exception as e:
+
+            logger.exception(f"Supabase Auth connection error during login for {email}: {e}")
+            raise AuthenticationException(
+                "Authentication service connection failed. Please check network or Supabase service status."
+            )
+
+        if not auth_response or not auth_response.user:
 
             raise AuthenticationException(
                 "Invalid email or password."
@@ -63,14 +72,23 @@ class AuthService:
         # Fetch application user from public.users
         # -------------------------------------------------
 
-        user = (
-            self.db
-            .table("users")
-            .select("*")
-            .eq("email", email)
-            .single()
-            .execute()
-        )
+        try:
+
+            user = (
+                self.db
+                .table("users")
+                .select("*")
+                .eq("email", email)
+                .single()
+                .execute()
+            )
+
+        except Exception as ex:
+
+            logger.exception(f"Failed to query user profile for {email}: {ex}")
+            raise AuthenticationException(
+                "User profile lookup failed."
+            )
 
         if not user.data:
 
@@ -82,11 +100,13 @@ class AuthService:
         # Create Backend JWT
         # -------------------------------------------------
 
+        user_data = user.data
         access_token = create_access_token(
             {
-                "sub": str(user.data["id"]),
-                "email": user.data["email"],
-                "role": user.data["role"],
+                "sub": str(user_data["id"]),
+                "email": user_data["email"],
+                "role": user_data.get("role", "user"),
+                "tenant_id": str(user_data.get("tenant_id", "")),
             }
         )
 
@@ -97,9 +117,10 @@ class AuthService:
         return {
             "access_token": access_token,
             "token_type": "bearer",
-            "user_id": str(user.data["id"]),
-            "email": user.data["email"],
-            "role": user.data["role"],
+            "user_id": str(user_data["id"]),
+            "email": user_data["email"],
+            "role": user_data.get("role", "user"),
+            "tenant_id": str(user_data.get("tenant_id", "")),
         }
 
 

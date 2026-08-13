@@ -1,224 +1,113 @@
 "use client";
 
-// ======================================================
-// Create Ticket Form
-//
-// Purpose:
-// Allows authenticated users to create a new support ticket.
-// ======================================================
-
 import { useState } from "react";
-
+import { PlusCircle, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { createTicket } from "@/services/ticket.service";
-
-// ======================================================
-// Props
-// ======================================================
+import Input from "../common/Input";
+import Button from "../common/Button";
 
 type Props = {
   onTicketCreated: () => void;
 };
 
-// ======================================================
-// Component
-// ======================================================
-
-export default function CreateTicketForm({
-  onTicketCreated,
-}: Props) {
-
+export default function CreateTicketForm({ onTicketCreated }: Props) {
   const { token } = useAuth();
 
   const [title, setTitle] = useState("");
-
   const [description, setDescription] = useState("");
-
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState("");
-
   const [success, setSuccess] = useState("");
 
-  // ======================================================
-  // Submit Form
-  // ======================================================
-
-  async function handleSubmit(
-    e: React.FormEvent<HTMLFormElement>
-  ) {
-
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
     setError("");
     setSuccess("");
 
     if (!title.trim() || !description.trim()) {
-
-      setError("Please fill all fields.");
-
+      setError("Please fill in both title and description.");
       return;
-
     }
 
     if (!token) {
-
       setError("Session expired. Please login again.");
-
       return;
-
     }
 
     try {
-
       setLoading(true);
+      await createTicket(title, description, token);
 
-      await createTicket(
-        title,
-        description,
-        token
-      );
-
-      setSuccess("Ticket created successfully.");
-
+      setSuccess("Support ticket created successfully.");
       setTitle("");
-
       setDescription("");
-
       onTicketCreated();
-
     } catch (err: any) {
-
-      setError(
-        err.message || "Failed to create ticket."
-      );
-
+      setError(err.message || "Failed to create ticket.");
     } finally {
-
       setLoading(false);
-
     }
-
   }
 
-  // ======================================================
-  // UI
-  // ======================================================
-
   return (
+    <div className="mb-8 rounded-2xl glass-panel p-6 sm:p-8 border border-white/10 shadow-2xl">
+      <div className="flex items-center gap-2 mb-6">
+        <PlusCircle className="h-5 w-5 text-purple-400" />
+        <h2 className="text-xl font-bold text-white tracking-tight">Create Support Ticket</h2>
+      </div>
 
-    <div className="mb-8 rounded-xl bg-white p-8 shadow-md">
+      {success && (
+        <div className="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-xs text-emerald-300 flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+          <span>{success}</span>
+        </div>
+      )}
 
-      <h2 className="mb-6 text-3xl font-bold text-gray-900">
+      {error && (
+        <div className="mb-6 rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 text-xs text-rose-300 flex items-center gap-2">
+          <AlertCircle className="h-4 w-4 text-rose-400 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
-        Create New Ticket
-
-      </h2>
-
-      {
-
-        success && (
-
-          <div className="mb-6 rounded-lg border border-green-300 bg-green-100 px-4 py-3 text-green-700">
-
-            {success}
-
-          </div>
-
-        )
-
-      }
-
-      {
-
-        error && (
-
-          <div className="mb-6 rounded-lg border border-red-300 bg-red-100 px-4 py-3 text-red-700">
-
-            {error}
-
-          </div>
-
-        )
-
-      }
-
-      <form onSubmit={handleSubmit}>
-
-        {/* ================================
-            Title
-        ================================= */}
-
-        <div className="mb-5">
-
-          <label className="mb-2 block text-lg font-medium text-gray-800">
-
-            Title
-
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div>
+          <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-300">
+            Ticket Title
           </label>
-
-          <input
+          <Input
             type="text"
+            placeholder="Brief summary of your support request"
             value={title}
-            onChange={(e) =>
-              setTitle(e.target.value)
-            }
-            placeholder="Enter ticket title"
-            className="w-full rounded-lg border border-gray-300 bg-white p-3 text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
+            onChange={(e) => setTitle(e.target.value)}
           />
-
         </div>
 
-        {/* ================================
-            Description
-        ================================= */}
-
-        <div className="mb-6">
-
-          <label className="mb-2 block text-lg font-medium text-gray-800">
-
-            Description
-
+        <div>
+          <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-300">
+            Issue Description
           </label>
-
           <textarea
-            rows={6}
+            rows={4}
             value={description}
-            onChange={(e) =>
-              setDescription(e.target.value)
-            }
-            placeholder="Describe your issue..."
-            className="w-full rounded-lg border border-gray-300 bg-white p-3 text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none"
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Provide relevant details, steps to reproduce, or error messages..."
+            className="w-full rounded-xl glass-input px-4 py-3 text-sm text-gray-100 placeholder:text-gray-500 transition duration-200 focus:outline-none"
           />
-
         </div>
 
-        {/* ================================
-            Button
-        ================================= */}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-lg bg-blue-600 px-8 py-3 text-lg font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
-        >
-
-          {
-
-            loading
-
-              ? "Creating..."
-
-              : "Create Ticket"
-
-          }
-
-        </button>
-
+        <div className="flex justify-end">
+          <div className="w-full sm:w-48">
+            <Button
+              type="submit"
+              text={loading ? "Creating..." : "Submit Ticket"}
+              disabled={loading}
+              icon={loading ? <Sparkles className="h-4 w-4 animate-spin" /> : <PlusCircle className="h-4 w-4" />}
+            />
+          </div>
+        </div>
       </form>
-
     </div>
-
   );
-
 }

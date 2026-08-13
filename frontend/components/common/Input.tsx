@@ -1,6 +1,4 @@
-// ======================================================
-// Reusable Input Component
-// ======================================================
+import React from "react";
 
 type InputProps = {
   type: string;
@@ -9,6 +7,8 @@ type InputProps = {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  icon?: React.ReactNode;
+  className?: string;
 };
 
 export default function Input({
@@ -17,31 +17,28 @@ export default function Input({
   placeholder,
   value,
   onChange,
+  onKeyDown,
+  icon,
+  className = "",
 }: InputProps) {
   return (
-    <input
-      type={type}
-      name={name}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      className="
-        w-full
-        rounded-xl
-        border
-        border-slate-300
-        bg-white
-        px-4
-        py-3
-        text-slate-800
-        placeholder:text-slate-400
-        caret-blue-600
-        outline-none
-        transition
-        focus:border-blue-600
-        focus:ring-4
-        focus:ring-blue-100
-      "
-    />
+    <div className="relative w-full">
+      {icon && (
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          {icon}
+        </div>
+      )}
+      <input
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        className={`w-full rounded-xl glass-input px-4 py-3 text-sm text-gray-100 placeholder:text-gray-500 transition duration-200 ${
+          icon ? "pl-11" : ""
+        } ${className}`}
+      />
+    </div>
   );
 }

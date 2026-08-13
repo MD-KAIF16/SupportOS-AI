@@ -1,11 +1,10 @@
 from app.core.supabase_client import supabase
 
-response = (
-    supabase
-    .table("support_documents")
-    .select("*")
-    .limit(1)
-    .execute()
-)
-
-print(response)
+def test_supabase_connectivity():
+    response = (
+        supabase
+        .table("users")
+        .select("count", count="exact")
+        .execute()
+    )
+    assert response is not None

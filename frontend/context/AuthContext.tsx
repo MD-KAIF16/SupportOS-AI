@@ -97,7 +97,7 @@ export function AuthProvider({
         const currentUser = await getCurrentUser(savedToken);
 
         setUser({
-          user_id: currentUser.user_id,
+          user_id: currentUser.user_id || currentUser.id,
           email: currentUser.email,
           role: currentUser.role,
         });

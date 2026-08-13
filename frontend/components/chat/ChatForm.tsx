@@ -1,66 +1,79 @@
 "use client";
 
-// ======================================================
-// Chat Form Component
-// ======================================================
-
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-import { sendMessage } from "@/services/chat.service";
+import { sendMessage, getChatHistory } from "@/services/chat.service";
 import { useAuth } from "@/context/AuthContext";
 
 import ChatHeader from "./ChatHeader";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
 
-// ======================================================
-// Types
-// ======================================================
+type DocumentContext = {
+  title: string;
+  content: string;
+  score?: number;
+};
 
 type Message = {
   role: "user" | "assistant";
   text: string;
   timestamp: string;
+  documents?: DocumentContext[];
 };
 
 export default function ChatForm() {
-
-  // =====================================================
-  // Router
-  // =====================================================
-
   const router = useRouter();
-
-  // =====================================================
-  // Auth Context
-  // =====================================================
-
-  const { token, logout } = useAuth();
-
-  // =====================================================
-  // User Input
-  // =====================================================
+  const { token } = useAuth();
 
   const [message, setMessage] = useState("");
-
-  // =====================================================
-  // Conversation
-  // =====================================================
-
   const [messages, setMessages] = useState<Message[]>([]);
-
-  // =====================================================
-  // Loading
-  // =====================================================
-
   const [loading, setLoading] = useState(false);
-
-  // =====================================================
-  // Auto Scroll Ref
-  // =====================================================
+  const [fetchingHistory, setFetchingHistory] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  // Load past conversation history on mount
+  useEffect(() => {
+    if (!token) return;
+
+    async function loadHistory() {
+      try {
+        setFetchingHistory(true);
+        const res = await getChatHistory(token!);
+        if (res.success && Array.isArray(res.history)) {
+          const loadedMsgs: Message[] = [];
+          res.history.forEach((item: any) => {
+            const timeStr = item.created_at
+              ? new Date(item.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+              : "";
+            if (item.question) {
+              loadedMsgs.push({
+                role: "user",
+                text: item.question,
+                timestamp: timeStr,
+              });
+            }
+            if (item.answer) {
+              loadedMsgs.push({
+                role: "assistant",
+                text: item.answer,
+                timestamp: timeStr,
+              });
+            }
+          });
+          setMessages(loadedMsgs);
+        }
+      } catch (err) {
+        console.error("Failed to load history:", err);
+      } finally {
+        setFetchingHistory(false);
+      }
+    }
+
+    loadHistory();
+  }, [token]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
@@ -68,58 +81,34 @@ export default function ChatForm() {
     });
   }, [messages, loading]);
 
-  // =====================================================
-  // Logout
-  // =====================================================
-
-  const handleLogout = () => {
-
-    logout();
-
-    router.replace("/");
-
-  };
-
-  // =====================================================
-  // Send Message
-  // =====================================================
-
   const handleSend = async () => {
-
     if (!message.trim()) return;
 
     if (!token) {
-
       router.replace("/");
-
       return;
-
     }
 
     const currentMessage = message;
+    const now = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
     setMessages((prev) => [
       ...prev,
       {
         role: "user",
         text: currentMessage,
-        timestamp: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
+        timestamp: now,
       },
     ]);
 
     setMessage("");
-
     setLoading(true);
 
     try {
-
-      const response = await sendMessage(
-        currentMessage,
-        token
-      );
+      const response = await sendMessage(currentMessage, token);
 
       setMessages((prev) => [
         ...prev,
@@ -130,81 +119,53 @@ export default function ChatForm() {
             hour: "2-digit",
             minute: "2-digit",
           }),
+          documents: response.data.documents || [],
         },
       ]);
-
     } catch (error) {
-
       console.error(error);
-
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          text: "Something went wrong. Please try again.",
+          text: "I encountered an issue processing your request. Please check your network or try again.",
           timestamp: new Date().toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
           }),
         },
       ]);
-
     } finally {
-
       setLoading(false);
-
     }
+  };
 
+  const handleClearHistory = () => {
+    setMessages([]);
+  };
+
+  const handleRegenerate = () => {
+    const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
+    if (lastUserMsg) {
+      setMessage(lastUserMsg.text);
+    }
   };
 
   return (
-
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-100 via-white to-blue-100 px-4 py-8">
-
-      <div className="w-full max-w-7xl rounded-3xl border border-slate-200 bg-white p-8 shadow-2xl">
-
-        {/* =========================================
-            Header
-        ========================================== */}
-
-        <div className="mb-6 flex items-center justify-between">
-
-          <ChatHeader />
-
-          <button
-            onClick={handleLogout}
-            className="rounded-lg bg-red-500 px-4 py-2 text-white transition hover:bg-red-600"
-          >
-            Logout
-          </button>
-
-        </div>
-
-        {/* =========================================
-            Messages
-        ========================================== */}
-
-        <ChatMessages
-          messages={messages}
-          loading={loading}
-          messagesEndRef={messagesEndRef}
-        />
-
-        {/* =========================================
-            Chat Input
-        ========================================== */}
-
-        <ChatInput
-          message={message}
-          setMessage={setMessage}
-          loading={loading}
-          handleSend={handleSend}
-        />
-
-      </div>
-
-    </main>
-
+    <div className="w-full max-w-5xl mx-auto flex flex-col flex-1">
+      <ChatHeader onClearHistory={handleClearHistory} />
+      <ChatMessages
+        messages={messages}
+        loading={loading || fetchingHistory}
+        messagesEndRef={messagesEndRef}
+        onRegenerate={handleRegenerate}
+      />
+      <ChatInput
+        message={message}
+        setMessage={setMessage}
+        loading={loading}
+        handleSend={handleSend}
+      />
+    </div>
   );
-
 }

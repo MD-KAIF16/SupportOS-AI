@@ -15,9 +15,13 @@ from fastapi.security import (
 
 from app.auth.security import verify_access_token
 from app.core.supabase_client import supabase
-from app.core.exceptions import AuthenticationException
+from app.core.exceptions import (
+    AuthenticationException,
+    AuthorizationException,
+)
 
 security = HTTPBearer()
+
 
 
 async def get_current_user(
@@ -65,9 +69,10 @@ def require_role(allowed_roles: list[str]):
 
         if current_user["role"] not in allowed_roles:
 
-            raise AuthenticationException(
+            raise AuthorizationException(
                 "You don't have permission to access this resource."
             )
+
 
         return current_user
 

@@ -29,3 +29,4 @@ class LoginResponse(BaseModel):
     user_id: str
     email: EmailStr
     role: str
+    tenant_id: str

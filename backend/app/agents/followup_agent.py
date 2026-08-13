@@ -20,12 +20,7 @@ def followup_agent(
     logger.info("FollowUp Agent Started")
 
     draft = state.get("draft_answer", "")
-
-    final_answer = (
-        f"{draft}\n\n"
-        "Does this solve your problem?\n\n"
-        "If not, I'm happy to help you further."
-    )
+    final_answer = draft.strip()
 
     state["final_answer"] = final_answer
 

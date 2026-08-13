@@ -9,8 +9,10 @@ User Profile APIs
 
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
+from app.auth.dependencies import get_current_user
+from app.core.exceptions import AuthorizationException
 from app.models.response_models import APIResponse
 from app.services.profile_service import profile_service
 
@@ -31,10 +33,25 @@ router = APIRouter(
 async def get_user_profile(
     tenant_id: UUID,
     user_id: UUID,
+    current_user: dict = Depends(get_current_user),
 ):
     """
     Fetch user profile.
     """
+
+    authenticated_tenant_id = UUID(current_user["tenant_id"])
+    authenticated_user_id = UUID(current_user["id"])
+    is_admin = current_user.get("role", "").lower() == "admin"
+
+    if tenant_id != authenticated_tenant_id:
+        raise AuthorizationException(
+            "You don't have permission to access this tenant's profile."
+        )
+
+    if not is_admin and user_id != authenticated_user_id:
+        raise AuthorizationException(
+            "You don't have permission to access this user's profile."
+        )
 
     try:
 

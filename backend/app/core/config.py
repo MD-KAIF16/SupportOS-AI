@@ -3,14 +3,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_PUBLISHABLE_KEY = os.getenv("SUPABASE_PUBLISHABLE_KEY")
-SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
-QDRANT_URL = os.getenv("QDRANT_URL")
-QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")   
+
+def _clean_env(key: str, default: str = "") -> str:
+    val = os.getenv(key, default) or ""
+    return val.strip('"' "' \t\r\n")
 
 
+GEMINI_API_KEY = _clean_env("GEMINI_API_KEY")
+SUPABASE_URL = _clean_env("SUPABASE_URL").rstrip('/')
+SUPABASE_PUBLISHABLE_KEY = _clean_env("SUPABASE_PUBLISHABLE_KEY")
+SUPABASE_SERVICE_ROLE_KEY = _clean_env("SUPABASE_SERVICE_ROLE_KEY")
+QDRANT_URL = _clean_env("QDRANT_URL")
+QDRANT_API_KEY = _clean_env("QDRANT_API_KEY")
 
 # ---------------------------------------------------------
 # RAG Configuration
@@ -26,6 +30,6 @@ TOP_K_DOCUMENTS = 3
 # JWT Configuration
 # ---------------------------------------------------------
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = _clean_env("SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60

@@ -71,15 +71,21 @@ def get_my_tickets(
     current_user: dict = Depends(get_current_user),
 ):
     """
-    Get all tickets of the authenticated user.
+    Get support tickets for the current user session.
+    Admin roles view all tenant tickets; customer roles view own tickets only.
     """
 
     try:
+        user_role = current_user.get("role", "").lower()
+        tenant_id = UUID(current_user["tenant_id"])
 
-        tickets = ticket_service.get_user_tickets(
-            user_id=UUID(current_user["id"]),          # ✅ FIXED
-            tenant_id=UUID(current_user["tenant_id"]),
-        )
+        if user_role == "admin":
+            tickets = ticket_service.get_tenant_tickets(tenant_id=tenant_id)
+        else:
+            tickets = ticket_service.get_user_tickets(
+                user_id=UUID(current_user["id"]),
+                tenant_id=tenant_id,
+            )
 
         return {
             "count": len(tickets),
@@ -90,5 +96,5 @@ def get_my_tickets(
 
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to fetch tickets !: {str(e)}",
-        )
+            detail=f"Failed to fetch tickets: {str(e)}",
+        )

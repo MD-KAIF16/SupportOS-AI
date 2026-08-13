@@ -60,12 +60,16 @@ def orchestrator(
         # Routing Logic
         # -------------------------------------------------
 
-        # Future:
-        # FAQ -> Knowledge Agent
-        # Ticket -> Ticket Agent
-        # Billing -> Billing Agent
+        question_lower = question.lower()
+        escalation_keywords = [
+            "human", "agent", "talk to human", "representative", 
+            "escalate", "real person", "support person", "speak to someone"
+        ]
 
-        state["next_agent"] = "knowledge_agent"
+        if any(keyword in question_lower for keyword in escalation_keywords):
+            state["next_agent"] = "escalation_agent"
+        else:
+            state["next_agent"] = "knowledge_agent"
 
         logger.info(
             f"Next Agent: {state['next_agent']}"

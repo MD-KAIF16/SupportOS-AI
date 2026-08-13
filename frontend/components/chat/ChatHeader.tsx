@@ -1,67 +1,55 @@
-// ======================================================
-// Chat Header Component
-// ======================================================
+"use client";
 
+import { Sparkles, Bot, Trash2 } from "lucide-react";
 import Logo from "../common/Logo";
 
-export default function ChatHeader() {
+type ChatHeaderProps = {
+  onClearHistory?: () => void;
+};
 
+export default function ChatHeader({ onClearHistory }: ChatHeaderProps) {
   return (
-
-    <div className="mb-6 rounded-2xl border border-slate-200 bg-white px-6 py-5 shadow-sm">
-
-      <div className="flex items-center gap-4">
-
-        {/* =========================================
-            Logo
-        ========================================== */}
-
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 shadow-sm">
-
-          <Logo size={52} />
-
+    <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-4">
+      <div className="flex items-center gap-3">
+        <div className="relative">
+          <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 opacity-50 blur-sm" />
+          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-[#0a0a0f] border border-white/10 text-purple-400">
+            <Bot className="h-5 w-5" />
+          </div>
         </div>
 
-        {/* =========================================
-            Title
-        ========================================== */}
-
-        <div className="flex flex-col">
-
-          <h1 className="text-3xl font-bold tracking-tight text-slate-800">
-
-            SupportOS AI
-
-          </h1>
-
-          <p className="mt-1 text-sm text-slate-500">
-
-            Intelligent Multi-Agent Customer Support Platform
-
+        <div>
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-bold text-white tracking-tight">
+              SupportOS <span className="text-purple-400">AI</span> Assistant
+            </h2>
+            <span className="inline-flex items-center gap-1 rounded-full bg-purple-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-purple-300 border border-purple-500/20">
+              <Sparkles className="h-2.5 w-2.5 text-purple-400" />
+              Gemini RAG + LangGraph
+            </span>
+          </div>
+          <p className="text-xs text-gray-400">
+            Knowledge Base RAG & Contextual Memory Active
           </p>
-
         </div>
-
-        {/* =========================================
-            Status
-        ========================================== */}
-
-        <div className="ml-auto flex items-center gap-2 rounded-full bg-green-50 px-4 py-2">
-
-          <span className="h-3 w-3 rounded-full bg-green-500 animate-pulse"></span>
-
-          <span className="text-sm font-medium text-green-700">
-
-            Online
-
-          </span>
-
-        </div>
-
       </div>
 
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 border border-emerald-500/20">
+          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-xs font-semibold text-emerald-300">Agents Ready</span>
+        </div>
+
+        {onClearHistory && (
+          <button
+            onClick={onClearHistory}
+            className="flex h-9 w-9 items-center justify-center rounded-xl glass-panel text-gray-400 hover:text-rose-400 hover:bg-rose-500/10 transition"
+            title="Clear Chat Session"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        )}
+      </div>
     </div>
-
   );
-
 }
