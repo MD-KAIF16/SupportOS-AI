@@ -1,4 +1,4 @@
-﻿annotated-doc==0.0.4
+annotated-doc==0.0.4
 annotated-types==0.7.0
 anyio==4.14.1
 certifi==2026.6.17
@@ -53,6 +53,7 @@ pydantic_core==2.46.4
 PyJWT==2.13.0
 python-dotenv==1.2.2
 python-jose==3.5.0
+pypdf==6.15.0
 PyYAML==6.0.3
 qdrant-client==1.18.0
 realtime==2.31.0
