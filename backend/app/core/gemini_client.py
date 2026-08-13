@@ -3,11 +3,11 @@
 File: gemini_client.py
 
 Purpose:
-Central Gemini client for SupportOS AI with exponential backoff retry and safe error handling.
+Central Gemini client for SupportOS AI with multi-model fallback and safe error handling.
 
 Responsibilities:
 1. Initialize Gemini client
-2. Generate AI responses with retries on transient errors
+2. Generate AI responses with automated fallback for quota/rate limits
 3. Generate embedding vectors
 =========================================================
 """
@@ -27,6 +27,13 @@ client = genai.Client(
     api_key=GEMINI_API_KEY,
 )
 
+# Active production models with available quota
+PREFERRED_MODELS = [
+    "gemini-flash-latest",
+    "gemini-flash-lite-latest",
+    "gemini-2.5-flash",
+]
+
 
 # =========================================================
 # Generate AI Response
@@ -40,33 +47,37 @@ client = genai.Client(
 )
 def ask_gemini(prompt: str) -> str:
     """
-    Generate AI response from Gemini using gemini-2.5-flash.
-    Includes automated retries for transient 503 server errors.
+    Generate AI response from Gemini with multi-model quota fallback.
     """
-    logger.info("[CHAT] Gemini request started (model: gemini-2.5-flash)")
+    last_exception = None
 
-    try:
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt,
-        )
+    for model_name in PREFERRED_MODELS:
+        logger.info(f"[CHAT] Requesting Gemini generation (model: {model_name})")
+        try:
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt,
+            )
 
-        if not response or not response.text:
-            logger.warning("[CHAT] Gemini response returned empty text payload.")
-            return "I couldn't find that information in the knowledge base."
+            if response and response.text:
+                logger.info(f"[CHAT] Gemini response received successfully from model: {model_name}")
+                return response.text
+            else:
+                logger.warning(f"[CHAT] Gemini model {model_name} returned empty text payload.")
+        except Exception as e:
+            err_msg = str(e)
+            last_exception = e
+            if "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg:
+                logger.warning(f"[CHAT] Model {model_name} failed: Quota/Rate Limit (429). Attempting fallback model...")
+            elif "503" in err_msg or "UNAVAILABLE" in err_msg:
+                logger.warning(f"[CHAT] Model {model_name} failed: High Demand (503). Attempting fallback model...")
+            else:
+                logger.error(f"[CHAT] Model {model_name} failed: {type(e).__name__}. Attempting fallback model...")
 
-        logger.info("[CHAT] Gemini response received successfully.")
-        return response.text
+    if last_exception:
+        raise last_exception
 
-    except Exception as e:
-        err_msg = str(e)
-        if "429" in err_msg or "RESOURCE_EXHAUSTED" in err_msg:
-            logger.warning("[CHAT] Gemini request failed: Rate limit / Quota exceeded (429).")
-        elif "503" in err_msg or "UNAVAILABLE" in err_msg:
-            logger.warning("[CHAT] Gemini request failed: High demand / Service unavailable (503).")
-        else:
-            logger.error(f"[CHAT] Gemini request failed: {type(e).__name__}")
-        raise
+    return "I couldn't find that information in the knowledge base."
 
 
 # =========================================================
