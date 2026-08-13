@@ -64,6 +64,73 @@ export async function login(
 }
 
 // ------------------------------------------------------
+// Register API (Customer Only)
+// ------------------------------------------------------
+
+export async function register(
+  email: string,
+  password: string,
+  fullName?: string
+) {
+  const response = await fetch(
+    `${BASE_URL}/api/auth/register`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        full_name: fullName,
+      }),
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      result.detail || result.message || "Registration Failed"
+    );
+  }
+
+  return result;
+}
+
+// ------------------------------------------------------
+// Forgot Password API
+// ------------------------------------------------------
+
+export async function forgotPassword(
+  email: string
+) {
+  const response = await fetch(
+    `${BASE_URL}/api/auth/forgot-password`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+      }),
+    }
+  );
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      result.detail || result.message || "Password Reset Request Failed"
+    );
+  }
+
+  return result;
+}
+
+
+// ------------------------------------------------------
 // Get Current Logged In User
 // ------------------------------------------------------
 

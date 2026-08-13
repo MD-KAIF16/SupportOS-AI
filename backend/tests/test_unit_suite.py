@@ -149,3 +149,15 @@ def test_multi_tenant_qdrant_isolation():
         # If Qdrant cluster network is offline/disconnected, handle gracefully
         assert "Qdrant" in type(e).__name__ or "ConnectError" in str(e) or "ResponseHandlingException" in str(e)
 
+
+def test_auth_forgot_password_endpoint():
+    response = client.post(
+        "/api/auth/forgot-password",
+        json={"email": "customer@example.com"}
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["success"] is True
+    assert "password reset link" in data["message"].lower()
+
+
