@@ -161,3 +161,18 @@ def test_auth_forgot_password_endpoint():
     assert "password reset link" in data["message"].lower()
 
 
+def test_admin_dashboard_endpoint_rbac():
+    # 1. Admin Token Access
+    admin_token = create_access_token({"sub": ADMIN_USER_ID, "role": "admin", "tenant_id": TENANT_ID})
+    admin_res = client.get("/api/admin/dashboard", headers={"Authorization": f"Bearer {admin_token}"})
+    assert admin_res.status_code == 200
+    assert admin_res.json()["success"] is True
+    assert "total_documents" in admin_res.json()["data"]
+
+    # 2. Customer Token Access (Should be 403 Forbidden)
+    customer_token = create_access_token({"sub": CUSTOMER_USER_ID, "role": "end_user", "tenant_id": TENANT_ID})
+    customer_res = client.get("/api/admin/dashboard", headers={"Authorization": f"Bearer {customer_token}"})
+    assert customer_res.status_code == 403
+
+
+

@@ -17,9 +17,9 @@ export default function Home() {
   useEffect(() => {
     if (!loading && token && user) {
       if (isAdmin) {
-        router.replace("/knowledge-base");
+        router.replace("/admin/dashboard");
       } else {
-        router.replace("/chat");
+        router.replace("/customer/dashboard");
       }
     }
   }, [loading, token, user, isAdmin, router]);

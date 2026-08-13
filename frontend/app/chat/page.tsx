@@ -2,42 +2,36 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import ChatForm from "@/components/chat/ChatForm";
-import Navigation from "@/components/layout/Navigation";
 import { useAuth } from "@/context/AuthContext";
 
-export default function ChatPage() {
+/**
+ * Chat Route Redirector.
+ * Forwards requests to /customer/chat or /admin/chat.
+ */
+export default function LegacyChatRedirect() {
   const router = useRouter();
-  const { token, loading } = useAuth();
+  const { user, token, loading } = useAuth();
 
   useEffect(() => {
     if (loading) return;
     if (!token) {
       router.replace("/");
+      return;
     }
-  }, [loading, token, router]);
-
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#050507]">
-        <div className="flex flex-col items-center gap-3">
-          <div className="h-10 w-10 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
-          <span className="text-xs text-purple-300 font-medium">Loading Chat Workspace...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (!token) {
-    return null;
-  }
+    const isAdmin = user?.role?.toLowerCase() === "admin";
+    if (isAdmin) {
+      router.replace("/admin/dashboard");
+    } else {
+      router.replace("/customer/chat");
+    }
+  }, [loading, token, user, router]);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navigation />
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col">
-        <ChatForm />
-      </main>
+    <div className="flex min-h-screen items-center justify-center bg-[#050507]">
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
+        <span className="text-xs text-purple-300 font-medium">Navigating to Support Chat...</span>
+      </div>
     </div>
   );
 }

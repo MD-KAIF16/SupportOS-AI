@@ -1,41 +1,43 @@
-# SupportOS AI — Autonomous AI Customer Support SaaS
+# SupportOS AI — Enterprise Autonomous AI Support SaaS Platform
 
-[![Backend CI](https://github.com/MD-KAIF16/SupportOS-AI/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/MD-KAIF16/SupportOS-AI/actions/workflows/backend-ci.yml)
-[![Frontend CI](https://github.com/MD-KAIF16/SupportOS-AI/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/MD-KAIF16/SupportOS-AI/actions/workflows/frontend-ci.yml)
+[![Backend CI](https://github.com/MD-KAIF16/SupportOS-AI/actions/workflows/backend-ci.yml/badge.svg)](https://github.com/MD-KAIF16/SupportOS-AI/actions)
+[![Frontend Build](https://github.com/MD-KAIF16/SupportOS-AI/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/MD-KAIF16/SupportOS-AI/actions)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.138-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
+[![Next.js](https://img.shields.io/badge/Next.js-16.2-black.svg?logo=next.js)](https://nextjs.org)
+[![Supabase](https://img.shields.io/badge/Supabase-Auth%20%26%20DB-3ECF8E.svg?logo=supabase)](https://supabase.com)
+[![Qdrant](https://img.shields.io/badge/Qdrant-Vector%20DB-dc2626.svg)](https://qdrant.tech)
 
-SupportOS AI is an enterprise-grade, multi-tenant AI Customer Support SaaS platform designed to deliver autonomous, grounded customer support experiences. Powered by **FastAPI**, **Next.js 16 (App Router)**, **LangGraph agent workflows**, **Qdrant Vector Database RAG**, **Google Gemini**, and **Supabase PostgreSQL**, SupportOS AI combines high-speed AI responses with strict multi-tenant security and a modern dark AI SaaS aesthetic inspired by leading tools like Claude.
+**SupportOS AI** is an enterprise-grade multi-tenant AI Customer Support SaaS platform. It combines autonomous multi-agent graph workflows, retrieval-augmented generation (RAG) grounded in company policies, automated human support escalation, ticket management, and real-time tenant performance analytics.
 
 ---
 
 ## 🌟 Key Features
 
-- 🎨 **Premium AI SaaS UI/UX**: Cinematic dark aesthetic (`#050507`), fluid glowing background blobs, translucent glassmorphism panels, and smooth micro-interactions.
-- 💬 **Claude-Style Rich Text Chat**: Progressive Markdown rendering, clean typography, document source chips, and action toolbars (Copy, Like, Dislike, Retry).
-- 🧠 **Multi-Agent LangGraph Architecture**: Stateful agent workflow comprising Orchestrator, Knowledge Agent, Escalation Agent, FollowUp Agent, and Judge Agent.
-- 🔍 **Multi-Tenant RAG Engine**: Vector similarity search in Qdrant with strict `tenant_id` payload isolation and similarity score filtering (`MIN_SEARCH_SCORE = 0.20`).
-- 🔄 **Autonomous Human Escalation**: Automatic escalation trigger detection, creating support tickets in Supabase when human assistance is requested.
-- 📊 **Tenant Analytics Dashboard**: Real-time metrics tracking AI resolution rate, total conversations, open/resolved tickets, and security audit status.
-- 🔒 **Enterprise Multi-Tenancy & RLS**: JWT authentication, Supabase Row-Level Security (RLS), and RBAC role checks (`admin`, `user`).
+* **Admin Enterprise Workspace (`/admin/*`)**:
+  * **Operational Console (`/admin/dashboard`)**: Live summary of indexed documents, support ticket breakdown, AI resolution rate, and high-priority escalation metrics.
+  * **Knowledge Base Management (`/admin/knowledge-base`)**: Upload PDF, TXT, MD documents or submit raw text policies with automatic Gemini embedding generation & Qdrant vector indexing.
+  * **Tenant Analytics (`/admin/analytics`)**: Isolated metrics for conversation activity, ticket resolution throughput, and AI efficiency.
+  * **Ticket Oversight (`/admin/tickets`)**: View and manage customer tickets and escalated human support queues across status filters (`Open`, `Escalated`, `Pending`, `Resolved`).
+
+* **Customer Portal (`/customer/*`)**:
+  * **AI Support Chat (`/customer/chat`)**: Context-aware RAG chat grounded strictly in company documentation with anti-hallucination guardrails.
+  * **My Support Tickets (`/customer/tickets`)**: Submit new support requests, view ticket status, and track agent updates.
+  * **Customer Dashboard (`/customer/dashboard`)**: Central hub for support activity and quick chat initiation.
+
+* **Multi-Tenant Security & RBAC**:
+  * Strict separation between Admin Workspace and Customer Portal with server-side FastAPI role authorization (`require_role(["admin"])`).
+  * Tenant data isolation enforced across Supabase database tables and Qdrant vector search queries (`tenant_id` payload filter).
 
 ---
 
-## 🏗️ Architecture
+## 🛠 Tech Stack
 
-```
-USER → NEXT.JS FRONTEND → FASTAPI BACKEND → JWT & TENANT AUTH
-                              ↓
-                      LANGGRAPH GRAPH
-                              ↓
-                ┌─────────────┴─────────────┐
-        Knowledge Agent              Escalation Agent
-        (Qdrant RAG + Gemini)        (Auto Ticket Generation)
-                └─────────────┬─────────────┘
-                         Judge Agent
-                              ↓
-                      FINAL AI RESPONSE
-```
-
-For complete architectural details, read [docs/architecture.md](docs/architecture.md).
+* **Frontend**: Next.js 16 (App Router), React 19, TypeScript, Vanilla CSS & Tailwind CSS, Lucide Icons.
+* **Backend**: FastAPI, Python 3.14, Uvicorn, Pydantic v2, PyJWT.
+* **Database & Auth**: Supabase Auth (Identity Management), Supabase Postgres (Relational Data & RLS).
+* **Vector Storage**: Qdrant Cloud (`support_docs` vector collection).
+* **AI & LLM**: Google Gemini 2.5 Flash (`gemini-2.5-flash`), Gemini Embeddings (`gemini-embedding-001`).
+* **Agent Framework**: LangGraph multi-agent graph state workflow (Orchestrator, Knowledge Agent, Escalation Agent, Judge Agent).
 
 ---
 
@@ -44,64 +46,83 @@ For complete architectural details, read [docs/architecture.md](docs/architectur
 ```
 SupportOS-AI/
 ├── backend/
+│   ├── main.py                     # FastAPI Application & Router Registration
+│   ├── requirements.txt            # Python Dependencies
 │   ├── app/
-│   │   ├── agents/          # LangGraph agents & state graph
-│   │   ├── auth/            # JWT dependencies & security
-│   │   ├── core/            # Config, logger, exceptions, DB clients
-│   │   ├── models/          # Pydantic data schemas
-│   │   ├── routers/         # FastAPI endpoints (auth, chat, tickets, analytics)
-│   │   └── services/        # Business logic services (Qdrant, Gemini, RAG, Tickets)
-│   ├── tests/               # PyTest backend test suite
-│   ├── main.py              # FastAPI application entry point
-│   └── requirements.txt     # Python dependencies
+│   │   ├── agents/                 # LangGraph Multi-Agent Workflows
+│   │   │   ├── orchestrator_agent.py # Intent Classification (FAQ vs Escalation)
+│   │   │   ├── knowledge_agent.py    # Vector Search & RAG Response Generation
+│   │   │   ├── escalation_agent.py   # High-Priority Support Ticket Escalation
+│   │   │   ├── judge_agent.py        # Hallucination Validation Guard
+│   │   │   └── graph.py              # Compiled LangGraph Workflow
+│   │   ├── auth/                   # Security & JWT Middleware
+│   │   ├── core/                   # Config, Database, Qdrant & Supabase Clients
+│   │   ├── models/                 # Pydantic Schemas & Data Models
+│   │   ├── routers/                # FastAPI Endpoints (auth, admin, chat, documents, tickets, analytics)
+│   │   └── services/               # Business Logic Services
+│   └── tests/                      # Pytest Automated Test Suite
+│       └── test_unit_suite.py
+│
 ├── frontend/
-│   ├── app/                 # Next.js 16 App Router pages (chat, tickets, analytics)
-│   ├── components/          # Dark theme glassmorphic UI components
-│   ├── context/             # AuthContext session state
-│   ├── services/            # Frontend API client services
-│   └── public/              # Brand assets & static files
-├── docs/                    # Architecture, backup, demo, & interview prep guides
-└── .github/workflows/       # CI/CD pipelines for backend and frontend
+│   ├── app/
+│   │   ├── admin/                  # Admin Workspace Pages & Sidebar Layout
+│   │   ├── customer/               # Customer Portal Pages & Top Header Layout
+│   │   └── page.tsx                # Role-Based Entry & Auth Gateway
+│   ├── components/                 # Reusable UI Components
+│   ├── context/                    # AuthContext Session State
+│   ├── services/                   # Frontend API Client Services
+│   └── types/                      # TypeScript Type Definitions
+│
+└── docs/                           # Technical Specifications & Architecture Guides
+    ├── architecture.md
+    ├── authentication.md
+    ├── authorization.md
+    ├── ai-rag.md
+    └── deployment.md
 ```
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚀 Local Development Setup
 
-### Prerequisites
-- Node.js v20+
-- Python 3.12+
-- Qdrant Cluster / Local Instance
-- Supabase Project & Google Gemini API Key
+### 1. Prerequisites
+- Python 3.10+
+- Node.js 18+
+- Supabase & Qdrant Cloud Credentials
 
-### 1. Backend Setup
+### 2. Backend Setup
 ```bash
 cd backend
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
-```
+# Windows:
+.\.venv\Scripts\activate
+# Linux/macOS:
+source .venv/bin/activate
 
-### 2. Frontend Setup
+pip install -r requirements.txt
+uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+```
+Backend API docs available at: `http://127.0.0.1:8000/docs`
+
+### 3. Frontend Setup
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-Open `http://localhost:3000` in your browser.
+Frontend web application available at: `http://localhost:3000`
 
 ---
 
-## 🧪 Testing
+## 🧪 Testing & Quality Assurance
 
-Run backend PyTest suite:
+### Run Backend Unit & Integration Tests
 ```bash
 cd backend
-pytest -v
+.\.venv\Scripts\python.exe -m pytest tests/test_unit_suite.py -v
 ```
 
-Build frontend Next.js production bundle:
+### Run Frontend Production Build
 ```bash
 cd frontend
 npm run build
@@ -109,9 +130,8 @@ npm run build
 
 ---
 
-## 📚 Documentation & Guides
+## ☁️ Deployment
 
-- 📐 [Architecture Specification](docs/architecture.md)
-- 💾 [Disaster Recovery & Backup Runbook](docs/backup_recovery.md)
-- 🎬 [Demo Walkthrough Guide](docs/demo_guide.md)
-- 💼 [Interview Preparation Guide](docs/interview_prep.md)
+- **Backend**: Deployed on **Render** Web Service (`uvicorn main:app --host 0.0.0.0 --port $PORT`).
+- **Frontend**: Deployed on **Vercel** (`NEXT_PUBLIC_API_URL=https://<your-render-backend>.onrender.com`).
+- Detailed deployment instructions in [docs/deployment.md](file:///c:/Users/user/SupportOS-AI/docs/deployment.md).

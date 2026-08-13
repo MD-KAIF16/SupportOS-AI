@@ -13,6 +13,7 @@ from app.routers.profile import router as profile_router
 from app.routers.tickets import router as tickets_router
 from app.routers.user import router as user_router
 from app.routers.analytics import router as analytics_router
+from app.routers.admin import router as admin_router
 from app.core.exception_handler import register_exception_handlers
 
 # ======================================================
@@ -61,6 +62,8 @@ app.include_router(documents_router)
 app.include_router(chat_router)
 app.include_router(tickets_router)
 app.include_router(analytics_router)
+app.include_router(admin_router)
+
 
 # ======================================================
 # Health & Home Endpoints
