@@ -10,7 +10,9 @@ def _clean_env(key: str, default: str = "") -> str:
 
 
 GEMINI_API_KEY = _clean_env("GEMINI_API_KEY")
+# Supabase Configuration
 SUPABASE_URL = _clean_env("SUPABASE_URL").rstrip('/')
+# SUPABASE_PUBLISHABLE_KEY is required for client initialization on app import
 SUPABASE_PUBLISHABLE_KEY = _clean_env("SUPABASE_PUBLISHABLE_KEY")
 SUPABASE_SERVICE_ROLE_KEY = _clean_env("SUPABASE_SERVICE_ROLE_KEY")
 QDRANT_URL = _clean_env("QDRANT_URL")
