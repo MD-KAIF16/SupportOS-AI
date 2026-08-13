@@ -19,7 +19,7 @@ Responsibilities:
 # Imports
 # =========================================================
 
-from langchain.tools import tool
+from langchain_core.tools import tool
 
 from app.agents.state import SupportState
 from app.core.logger import logger
