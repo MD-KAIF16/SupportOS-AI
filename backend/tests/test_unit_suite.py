@@ -175,4 +175,41 @@ def test_admin_dashboard_endpoint_rbac():
     assert customer_res.status_code == 403
 
 
+def test_rag_pipeline_prompt_and_document_retrieval():
+    from app.services.prompt_builder import build_prompt
+    from app.agents.knowledge_agent import knowledge_agent
+
+    # 1. Test Prompt Builder
+    prompt = build_prompt(
+        question="What is the billing policy?",
+        profile={"full_name": "Demo Customer", "email": "demo@example.com"},
+        conversation_history=[],
+        documents=[{"title": "Billing FAQ", "content": "Invoices are sent monthly."}]
+    )
+    assert "You are SupportOS AI." in prompt
+    assert "Invoices are sent monthly." in prompt
+    assert "Demo Customer" in prompt
+
+    # 2. Test Knowledge Agent State Transition
+    state = {
+        "messages": [HumanMessage(content="What is the billing policy?")],
+        "question": "What is the billing policy?",
+        "user_id": CUSTOMER_USER_ID,
+        "tenant_id": TENANT_ID,
+        "conversation_history": [],
+        "documents": [],
+        "context": "",
+        "user_profile": {},
+        "prompt": "",
+        "draft_answer": "",
+        "final_answer": "",
+        "next_agent": "",
+        "error": None,
+    }
+    res_state = knowledge_agent(state)
+    assert res_state["next_agent"] == "followup_agent"
+    assert len(res_state["draft_answer"]) > 0
+
+
+
 

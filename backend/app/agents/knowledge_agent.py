@@ -207,24 +207,22 @@ def knowledge_agent(
 
 
     try:
-
         answer = generate_response(
             prompt=prompt,
         )
-
-        logger.info(
-            "Gemini response generated successfully."
-        )
-
-    except Exception:
-
-        logger.exception(
-            "Gemini generation failed."
-        )
-
-        answer = (
-            "I'm sorry, something went wrong while generating the response."
-        )
+        logger.info("[CHAT] Gemini response generated successfully.")
+    except Exception as exc:
+        err_str = str(exc)
+        if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "503" in err_str:
+            logger.warning(f"[CHAT] Gemini generation failed: Rate limit / Quota (429/503)")
+            answer = (
+                "AI Support is temporarily unavailable due to high demand. Please try again in a moment or submit a support ticket above."
+            )
+        else:
+            logger.exception("[CHAT] Gemini generation failed.")
+            answer = (
+                "AI Support is temporarily unavailable. Please try again in a moment or submit a support ticket above."
+            )
 
 
     # -----------------------------------------------------
